@@ -1,6 +1,7 @@
 ﻿using Internship_Portal.Data_Access.Repository.IRepository;
 using Internship_Portal.Model;
 using Internship_Portal.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -44,12 +45,12 @@ namespace Internship_Portal.Controllers
             }
 
             // Check if the student already exists
-            var existingStudent = _unitOfWork.StudentData.Get(s => s.Email == obj.Email);
+            var existingStudent = _unitOfWork.StudentData.Get(s => s.Email == obj.Email || s.RollNumber == obj.RollNumber);
 
             if (existingStudent != null)
             {
                 TempData["error"] = "Student data already exists!";
-                return RedirectToAction("StudentRegistrationForm", "Student");  // Redirect back to form
+                return View(obj);  // Redirect back to form
             }
 
             // Creating a new Student object
@@ -103,8 +104,72 @@ namespace Internship_Portal.Controllers
             _unitOfWork.Save();
 
             TempData["success"] = "The Registration has been done successfully.";
-            return RedirectToAction("RedirectPage", "Student", new { registrationId = student.StudentId });
+            return RedirectToAction("UserProfile", "Account");
         }
+
+        #region API CALLS
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetAll(string status, int? year, bool? isPlaced, char? section, int? batch, string skills)
+        {
+            IEnumerable<Student> objRegistration;
+
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                objRegistration = _unitOfWork.StudentData.GetAll();
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                objRegistration = _unitOfWork.StudentData.GetAll(u => u.Email == userId ); // Adjust condition based on your logic
+            }
+
+            // Apply filtering
+            if (year.HasValue)
+            {
+                objRegistration = objRegistration.Where(u => u.Year == year.Value);
+            }
+            if (isPlaced.HasValue)
+            {
+                objRegistration = objRegistration.Where(u => u.IsPlaced == isPlaced.Value);
+            }
+            if (section.HasValue)
+            {
+                objRegistration = objRegistration.Where(u => u.Section == section.Value);
+            }
+            if (batch.HasValue)
+            {
+                objRegistration = objRegistration.Where(u => u.Batch == batch.Value);
+            }
+            if (!string.IsNullOrEmpty(skills))
+            {
+                var skillList = skills.Split(',').Select(s => s.Trim().ToLower()).ToList();
+                objRegistration = objRegistration.Where(u => skillList.Any(skill => u.Skills.ToLower().Contains(skill)));
+            }
+
+            return Json(new { data = objRegistration });
+        }
+
+
+        [HttpDelete]
+        [Authorize(Roles = SD.Role_Admin)]
+        public IActionResult Delete(int? id)
+        {
+            var RegistrationToBeDeleted = _unitOfWork.RegistrationForm.Get(u => u.ID == id);
+            if (RegistrationToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while deleting" });
+            }
+
+            _unitOfWork.RegistrationForm.Remove(RegistrationToBeDeleted);
+            _unitOfWork.Save();
+
+            return Json(new { success = true, message = "Deleted Successful" });
+        }
+
+        #endregion
 
     }
 }

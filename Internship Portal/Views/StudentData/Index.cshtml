@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Student>
+
+<div class="w-100 card border-0 p-4" style="margin-top: 7rem;">
+    <div class="card-header" style="background-color: #4154f1; margin-left: 0; padding-top: 1rem; padding-bottom: 1rem;">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Student List</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <!-- Filter Section -->
+        <div class="row pb-4">
+            <div class="col-md-2">
+                <label class="form-label">Year</label>
+                <select id="filterYear" class="form-control">
+                    <option value="">All</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Placed</label>
+                <select id="filterPlaced" class="form-control">
+                    <option value="">All</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Section</label>
+                <select id="filterSection" class="form-control">
+                    <option value="">All</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Batch</label>
+                <select id="filterBatch" class="form-control">
+                    <option value="">All</option>
+                    @for (int year = 2015; year <= DateTime.Now.Year; year++)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Skills</label>
+                <input type="text" id="filterSkills" class="form-control" placeholder="Enter skills">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button id="applyFilters" class="btn btn-primary w-100">Apply</button>
+            </div>
+        </div>
+
+        <table id="tblBookings" class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Roll Number</th>
+                    <th>Year</th>
+                    <th>Section</th>
+                    <th>Batch</th>
+                    <th>Skills</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/studentData.js"></script>
+}

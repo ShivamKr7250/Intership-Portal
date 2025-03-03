@@ -178,6 +178,22 @@
                                     <input asp-for="Project" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Project</label>
                                 </div>
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="Certifications" type="text" class="form-control form-control-lg" required />
+                                    <label class="form-label">Certifications</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="InternshipExperience" type="text" class="form-control form-control-lg" required />
+                                    <label class="form-label">InternshipExperience</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="ExtracurricularActivities" type="text" class="form-control form-control-lg" required />
+                                    <label class="form-label">ExtracurricularActivities</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="LanguagesKnown" type="text" class="form-control form-control-lg" required />
+                                    <label class="form-label">LanguagesKnown</label>
+                                </div>
                             </div>
 
                             <h5>Additional Details</h5>
@@ -204,6 +220,30 @@
                                 <div class="col-md-6 mb-4">
                                     <input asp-for="PreferredJobLocation" type="text" class="form-control form-control-lg" />
                                     <label class="form-label">Preferred Job Location</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="WorkAuthorization" type="text" class="form-control form-control-lg" />
+                                    <label class="form-label">Work Authorization</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Placed OR NOT</label>
+                                    <select asp-for="IsPlaced" class="form-control form-control-lg">
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="PlacedCompany" type="text" class="form-control form-control-lg" />
+                                    <label class="form-label">Placed Company</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <input asp-for="PlacementDate" type="date" class="form-control form-control-lg" />
+                                    <label class="form-label">Placed Date</label>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <textarea asp-for="AdditionalNotes" class="form-control form-control-lg"></textarea>
+                                    <label class="form-label">Additional Notes</label>
                                 </div>
                             </div>
 
