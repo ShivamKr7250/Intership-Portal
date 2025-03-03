@@ -34,6 +34,8 @@ namespace Internship_Portal.Data_Access.Data
                 {
                     _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).Wait();
                     _roleManager.CreateAsync(new IdentityRole(SD.Role_Student)).Wait();
+                    _roleManager.CreateAsync(new IdentityRole(SD.Role_Mentor)).Wait();
+                    _roleManager.CreateAsync(new IdentityRole(SD.Role_TNP)).Wait();
 
                     _userManager.CreateAsync(new ApplicationUser
                     {

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Internship_Portal.Utility;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Internship_Portal.Model.VM;
-using RF_Technologies.Model.VM;
 
 namespace Internship_Portal.Controllers
 {

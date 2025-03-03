@@ -1,7 +1,6 @@
-﻿using Internship_Portal.Model;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace RF_Technologies.Model.VM
+namespace Internship_Portal.Model.VM
 {
     public class RoleManagementVM
     {

@@ -30,7 +30,7 @@ function loadDataTable() {
                             </a>
                         </div>
                         <div class="text-center">
-                            <a href="/Admin/User/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer; width:150px;">
+                            <a href="/User/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer; width:150px;">
                                 <i class="bi bi-pencil-square"></i> Permission
                             </a>
                         </div>`;
@@ -42,7 +42,7 @@ function loadDataTable() {
                             </a>
                         </div>
                         <div class="text-center">
-                            <a href="/Admin/User/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer; width:150px;">
+                            <a href="/User/RoleManagement?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer; width:150px;">
                                 <i class="bi bi-pencil-square"></i> Permission
                             </a>
                         </div>`;
