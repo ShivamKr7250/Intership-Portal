@@ -8,6 +8,9 @@ namespace Internship_Portal.Model
         public int StudentId { get; set; }
 
         [Required]
+        public int RollNumber { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
         [Required]
@@ -89,27 +92,27 @@ namespace Internship_Portal.Model
 
         public decimal CGPA { get; set; }  // Cumulative GPA
 
-        public string Certifications { get; set; }  // Certifications (e.g., AWS, Azure)
+        public string? Certifications { get; set; }  // Certifications (e.g., AWS, Azure)
 
-        public string InternshipExperience { get; set; }  // Past Internships
+        public string? InternshipExperience { get; set; }  // Past Internships
 
-        public string ExtracurricularActivities { get; set; }  // Clubs, leadership roles
+        public string? ExtracurricularActivities { get; set; }  // Clubs, leadership roles
 
-        public string LanguagesKnown { get; set; }  // Spoken and programming languages
+        public string? LanguagesKnown { get; set; }  // Spoken and programming languages
 
-        public string PreferredJobLocation { get; set; }  // Preferred job location
+        public string? PreferredJobLocation { get; set; }  // Preferred job location
 
-        public string WorkAuthorization { get; set; }  // Work status (e.g., visa status)
+        public string? WorkAuthorization { get; set; }  // Work status (e.g., visa status)
 
         public decimal ExpectedSalary { get; set; }  // Expected salary
 
         public bool IsPlaced { get; set; }  // Placement status
 
-        public string PlacedCompany { get; set; }  // Company where placed
+        public string? PlacedCompany { get; set; }  // Company where placed
 
         public DateTime? PlacementDate { get; set; }  // Date of placement
 
-        public string AdditionalNotes { get; set; }  // Any extra info
+        public string? AdditionalNotes { get; set; }  // Any extra info
     }
 
 }

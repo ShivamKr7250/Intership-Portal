@@ -55,7 +55,7 @@ namespace Internship_Portal.Controllers
             // Creating a new Student object
             Student student = new Student
             {
-                StudentId = obj.StudentId,
+                RollNumber = obj.RollNumber,
                 Name = obj.Name,
                 Email = obj.Email,
                 Contact = obj.Contact,
