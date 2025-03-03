@@ -16,6 +16,7 @@ namespace Internship_Portal.Data_Access.Repository.IRepository
         IBlogCommentRepository BlogComment { get; }
         IInteractionRepository Interaction { get; }
         IBlogCategoryRepository BlogCategory { get; }
+        IStudentDataRepository StudentData { get; }
         void Save();
     }
 }

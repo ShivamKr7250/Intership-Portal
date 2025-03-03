@@ -19,6 +19,7 @@ namespace Internship_Portal.Data_Access.Data
         public DbSet<BlogComment> BlogsComment { get; set; }
         public DbSet<Interaction> Interaction { get; set; }
         public DbSet<BlogCategory> BlogCategories { get; set; }
+        public DbSet<Student> StudentsData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

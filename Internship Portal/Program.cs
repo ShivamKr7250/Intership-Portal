@@ -44,8 +44,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-// Add YouTubeService with API key
-builder.Services.AddScoped(sp => new YouTubeServiceFile(builder.Configuration.GetSection("YouTube:ApiKey").Value));
 
 SyncfusionLicenseProvider.RegisterLicense(builder.Configuration.GetSection("Syncfusion:LicenseKey").Get<string>());
 

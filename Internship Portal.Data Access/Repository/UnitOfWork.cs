@@ -16,6 +16,7 @@ namespace Internship_Portal.Data_Access.Repository
         public IBlogCommentRepository BlogComment { get; private set; }
         public IInteractionRepository Interaction { get; private set; }
         public IBlogCategoryRepository BlogCategory { get; private set; }
+        public IStudentDataRepository StudentData { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -28,6 +29,7 @@ namespace Internship_Portal.Data_Access.Repository
             BlogComment = new BlogCommentRepository(_db);
             Interaction = new InteractionRepository(_db);
             BlogCategory = new BlogCategoryRepository(_db);
+            StudentData = new StudentDataRepository(_db);
         }
 
         public void Save()
