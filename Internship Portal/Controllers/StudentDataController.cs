@@ -110,47 +110,55 @@ namespace Internship_Portal.Controllers
         #region API CALLS
         [HttpGet]
         [Authorize]
-        public IActionResult GetAll(string status, int? year, bool? isPlaced, char? section, int? batch, string skills)
+        public IActionResult GetAll(string status, int? year, bool? isPlaced, char? section, int? batch, string skills, int draw, int start, int length)
         {
-            IEnumerable<Student> objRegistration;
+            var query = _unitOfWork.StudentData.GetAll();
 
-            if (User.IsInRole(SD.Role_Admin))
-            {
-                objRegistration = _unitOfWork.StudentData.GetAll();
-            }
-            else
+            if (!User.IsInRole(SD.Role_Admin))
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-                objRegistration = _unitOfWork.StudentData.GetAll(u => u.Email == userId ); // Adjust condition based on your logic
+                query = query.Where(u => u.Email == userId);
             }
 
             // Apply filtering
             if (year.HasValue)
             {
-                objRegistration = objRegistration.Where(u => u.Year == year.Value);
+                query = query.Where(u => u.Year == year.Value);
             }
             if (isPlaced.HasValue)
             {
-                objRegistration = objRegistration.Where(u => u.IsPlaced == isPlaced.Value);
+                query = query.Where(u => u.IsPlaced == isPlaced.Value);
             }
             if (section.HasValue)
             {
-                objRegistration = objRegistration.Where(u => u.Section == section.Value);
+                query = query.Where(u => u.Section == section.Value);
             }
             if (batch.HasValue)
             {
-                objRegistration = objRegistration.Where(u => u.Batch == batch.Value);
+                query = query.Where(u => u.Batch == batch.Value);
             }
             if (!string.IsNullOrEmpty(skills))
             {
                 var skillList = skills.Split(',').Select(s => s.Trim().ToLower()).ToList();
-                objRegistration = objRegistration.Where(u => skillList.Any(skill => u.Skills.ToLower().Contains(skill)));
+                query = query.Where(u => skillList.Any(skill => u.Skills.ToLower().Contains(skill)));
             }
 
-            return Json(new { data = objRegistration });
+            // Get total records count before applying pagination
+            int totalRecords = query.Count();
+
+            // Apply pagination
+            var data = query.Skip(start).Take(length).ToList();
+
+            return Json(new
+            {
+                draw = draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = data
+            });
         }
+
 
 
         [HttpDelete]

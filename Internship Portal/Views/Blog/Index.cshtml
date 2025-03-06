@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-        @if (SignInManager.IsSignedIn(User))
+        @if (User.IsInRole(SD.Role_TNP))
     {
         <div class="d-flex justify-content-center">
             <a asp-controller="Blog" asp-action="Create" class="btn btn-primary mb-3">Create A Blog</a>
