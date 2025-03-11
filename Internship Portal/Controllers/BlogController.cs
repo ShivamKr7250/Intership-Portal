@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Internship_Portal.Data_Access.Repository;
 using Internship_Portal.Utility;
 using Microsoft.EntityFrameworkCore;
+using SkiaSharp;
+using Microsoft.AspNetCore.Identity;
 
 namespace Internship_Portal.Controllers
 {
@@ -162,7 +164,7 @@ namespace Internship_Portal.Controllers
         [Authorize]
         public IActionResult Details(int blogId)
         {
-            // Ensure ApplicationUser is included for both BlogPost and Comments
+            // Fetch blog post details, including related entities
             var blogDetails = _unitOfWork.BlogPost.Get(
                 u => u.PostId == blogId,
                 includeProperties: "ApplicationUser,Comments.ApplicationUser,BlogCategory"
@@ -170,27 +172,31 @@ namespace Internship_Portal.Controllers
 
             if (blogDetails == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            // Ensure Comments is not null and initialize if necessary
-            if (blogDetails.Comments == null)
-            {
-                blogDetails.Comments = new List<BlogComment>();
-            }
+            // Ensure Comments is initialized to prevent null reference issues
+            blogDetails.Comments ??= new List<BlogComment>();
 
+            // Get the logged-in user details
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userDetail = _unitOfWork.User.Get(u => u.Id == userId);
 
-            // Initialize Student as null
+            // Initialize student details only if the user is a student
             Student studentDetail = null;
+            bool hasAlreadyApplied = false;
 
-            // Check if the user has the "Student" role
             if (User.IsInRole(SD.Role_Student))
             {
                 studentDetail = _unitOfWork.StudentData.Get(s => s.UserId == userId);
+
+                if (studentDetail != null)
+                {
+                    hasAlreadyApplied = _unitOfWork.AppliedDrive.Any(a => a.StudentId == studentDetail.StudentId && a.DriveId == blogId);
+                }
             }
 
+            // Prepare the ViewModel
             var model = new BlogVM
             {
                 BlogPost = blogDetails,
@@ -200,23 +206,57 @@ namespace Internship_Portal.Controllers
                     ApplicationUser = userDetail,
                     PostId = blogId
                 },
-                // Map Comments including ApplicationUser data
                 Comments = blogDetails.Comments.Select(comment => new BlogComment
                 {
                     UserId = comment.UserId,
-                    ApplicationUser = comment.ApplicationUser, // Load the ApplicationUser for each comment
+                    ApplicationUser = comment.ApplicationUser ?? new ApplicationUser(), // Prevent null reference
                     PostId = comment.PostId,
-                    Content = comment.Content, // Assuming you have a Content property
-                    Timestamp = comment.Timestamp // Assuming you have a Timestamp or similar property
-                }).ToList(), // Convert to List to fit IEnumerable<BlogComment>
+                    Content = comment.Content,
+                    Timestamp = comment.Timestamp
+                }).ToList(),
                 User = userDetail,
-                Student = studentDetail // Include student details
+                Student = studentDetail,
+                HasAlreadyApplied = hasAlreadyApplied // NEW: Track if the student has applied
             };
 
             return View(model);
         }
 
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Student)]
+        public IActionResult Apply(int postId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userDetail = _unitOfWork.User.Get(u => u.Id == userId);
 
+            var student = _unitOfWork.StudentData.Get(s => s.UserId == userId);
+
+            if (student == null)
+            {
+                return RedirectToAction("Login", "Account"); // Redirect if not logged in
+            }
+
+            var alreadyApplied = _unitOfWork.AppliedDrive
+                .Any(a => a.StudentId == student.StudentId && a.DriveId == postId);
+
+            if (alreadyApplied)
+            {
+                TempData["Error"] = "You have already applied for this drive.";
+                return RedirectToAction("Details","Blog", new { id = postId });
+            }
+
+            var application = new AppliedDrive
+            {
+                StudentId = student.StudentId,
+                DriveId = postId
+            };
+
+            _unitOfWork.AppliedDrive.Add(application);
+            _unitOfWork.Save(); // Synchronous save
+
+            TempData["Success"] = "Application submitted successfully!";
+            return RedirectToAction("Details","Blog", new { id = postId });
+        }
 
         [HttpPost]
         [Authorize]

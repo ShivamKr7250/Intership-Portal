@@ -12,5 +12,6 @@ namespace Internship_Portal.Model.VM
         public IEnumerable<SelectListItem>? CategoryList { get; set; }
         public List<string>? Tags { get; set; }
         public IEnumerable<BlogComment>? Comments { get; set; }
+        public bool HasAlreadyApplied { get; set; }
     }
 }

@@ -1,5 +1,7 @@
-﻿$(document).ready(function () {
-    var dataTable = $('#tblBookings').DataTable({
+﻿var dataTable; // Declare globally
+
+$(document).ready(function () {
+    dataTable = $('#tblBookings').DataTable({  // Initialize it inside document ready
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -12,12 +14,10 @@
                 d.batch = $('#filterBatch').val() ? parseInt($('#filterBatch').val()) : null;
                 d.skills = $('#filterSkills').val() || null;
             },
-
             error: function (xhr, error, thrown) {
                 console.error('Error loading data: ', error);
                 toastr.error('Failed to load data.');
             }
-
         },
         "columns": [
             { data: 'name', "width": "10%" },
@@ -31,10 +31,10 @@
                 data: 'studentId',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                        <a href="/studentData/studentDataUpdate?studentId=${data}" class="btn btn-outline-warning mx-2">
+                        <a href="/studentData/studentDataRegistration?studentId=${data}" class="btn btn-outline-warning mx-2">
                             <i class="bi bi-pencil-square"></i> Details
                         </a>
-                        <a onClick=Delete('/studentData/delete/${data}') class="btn btn-outline-danger mx-2">
+                        <a onClick="Delete('/studentData/delete/${data}')" class="btn btn-outline-danger mx-2">
                             <i class="bi bi-trash-fill"></i> Delete
                         </a>
                     </div>`;
@@ -54,6 +54,7 @@
     });
 });
 
+// ✅ Delete Function with Global Access to dataTable
 function Delete(url) {
     Swal.fire({
         title: 'Are you sure?',
@@ -69,7 +70,7 @@ function Delete(url) {
                 url: url,
                 type: "DELETE",
                 success: function (data) {
-                    dataTable.ajax.reload();
+                    dataTable.ajax.reload(); // ✅ Now accessible globally
                     toastr.success(data.message);
                 },
                 error: function (xhr, error, thrown) {
@@ -80,6 +81,3 @@ function Delete(url) {
         }
     });
 }
-
-
-

@@ -20,6 +20,7 @@ namespace Internship_Portal.Data_Access.Data
         public DbSet<Interaction> Interaction { get; set; }
         public DbSet<BlogCategory> BlogCategories { get; set; }
         public DbSet<Student> StudentsData { get; set; }
+        public DbSet<AppliedDrive> AppliedDrive { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,6 +71,18 @@ namespace Internship_Portal.Data_Access.Data
                 .HasOne(i => i.ApplicationUser)
                 .WithMany(u => u.Interactions)
                 .HasForeignKey(i => i.UserId);
+
+            modelBuilder.Entity<AppliedDrive>()
+                .HasOne(a => a.Student)
+                .WithMany()
+                .HasForeignKey(a => a.StudentId)
+                .OnDelete(DeleteBehavior.Restrict); // 🔹 Prevents cascade delete on Student
+
+            modelBuilder.Entity<AppliedDrive>()
+                .HasOne(a => a.BlogPost)
+                .WithMany()
+                .HasForeignKey(a => a.DriveId)
+                .OnDelete(DeleteBehavior.Cascade); // 🔹 Keeps cascade delete on BlogPost
 
         }
 

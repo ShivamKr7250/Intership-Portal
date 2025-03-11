@@ -4,6 +4,7 @@ using Internship_Portal.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Internship_Portal.Controllers
 {
@@ -21,9 +22,19 @@ namespace Internship_Portal.Controllers
             return View(studentData);
         }
 
-        public IActionResult StudentDataRegistration()
+        public IActionResult StudentDataRegistration(string userId)
         {
-            return View();
+            if (userId == null)
+            {
+                //Create
+                return View();
+            }
+            else
+            {
+                //Update
+                Student studentData = _unitOfWork.StudentData.Get(u => u.UserId == userId);
+                return View(studentData);
+            }
         }
 
         [HttpPost]
@@ -37,100 +48,68 @@ namespace Internship_Portal.Controllers
                 return BadRequest("User not authenticated.");
             }
 
-            ApplicationUser user = _unitOfWork.User.Get(u => u.Id == userId);
-
-            if (user == null)
-            {
-                return BadRequest("User not found.");
-            }
-
-            // Check if the student already exists
-            var existingStudent = _unitOfWork.StudentData.Get(s => s.Email == obj.Email || s.RollNumber == obj.RollNumber);
+            // Check if the student already exists by UserId
+            var existingStudent = _unitOfWork.StudentData.Get(s => s.UserId == userId);
 
             if (existingStudent != null)
             {
-                TempData["error"] = "Student data already exists!";
-                return View(obj);  // Redirect back to form
+                // Update the existing student record instead of inserting a new one
+                existingStudent.RollNumber = obj.RollNumber;
+                existingStudent.Name = obj.Name;
+                existingStudent.Email = obj.Email;
+                existingStudent.Contact = obj.Contact;
+                existingStudent.Address = obj.Address;
+                existingStudent.City = obj.City;
+                existingStudent.State = obj.State;
+                existingStudent.Section = obj.Section;
+                existingStudent.Year = obj.Year;
+                existingStudent.Department = obj.Department;
+                existingStudent.Course = obj.Course;
+                existingStudent.Specialization = obj.Specialization;
+                existingStudent.Batch = obj.Batch;
+                existingStudent.Backlogs = obj.Backlogs;
+                existingStudent.MatricPercentage = obj.MatricPercentage;
+                existingStudent.InterPercentage = obj.InterPercentage;
+                existingStudent.DiplomaPercentage = obj.DiplomaPercentage;
+                existingStudent.GraduationPercentage = obj.GraduationPercentage;
+                existingStudent.PostGraduationPercentage = obj.PostGraduationPercentage;
+                existingStudent.ParentName = obj.ParentName;
+                existingStudent.ParentContact = obj.ParentContact;
+                existingStudent.Skills = obj.Skills;
+                existingStudent.Project = obj.Project;
+                existingStudent.GitHubProfile = obj.GitHubProfile;
+                existingStudent.LinkedInProfile = obj.LinkedInProfile;
+                existingStudent.Resume = obj.Resume;
+                existingStudent.DOB = obj.DOB;
+                existingStudent.Gender = obj.Gender;
+                existingStudent.Nationality = obj.Nationality;
+                existingStudent.CGPA = obj.CGPA;
+                existingStudent.Certifications = obj.Certifications;
+                existingStudent.InternshipExperience = obj.InternshipExperience;
+                existingStudent.ExtracurricularActivities = obj.ExtracurricularActivities;
+                existingStudent.LanguagesKnown = obj.LanguagesKnown;
+                existingStudent.PreferredJobLocation = obj.PreferredJobLocation;
+                existingStudent.WorkAuthorization = obj.WorkAuthorization;
+                existingStudent.ExpectedSalary = obj.ExpectedSalary;
+                existingStudent.IsPlaced = obj.IsPlaced;
+                existingStudent.PlacedCompany = obj.PlacedCompany;
+                existingStudent.PlacementDate = obj.PlacementDate;
+                existingStudent.AdditionalNotes = obj.AdditionalNotes;
+
+                _unitOfWork.StudentData.Update(existingStudent);
+                _unitOfWork.Save();
+
+                TempData["success"] = "The Data has been Updated successfully.";
+                return RedirectToAction("UserProfile", "Account");
             }
 
-            // Creating a new Student object
-            Student student = new Student
-            {
-                UserId = userId,
-                RollNumber = obj.RollNumber,
-                Name = obj.Name,
-                Email = obj.Email,
-                Contact = obj.Contact,
-                Address = obj.Address,
-                City = obj.City,
-                State = obj.State,
-                Section = obj.Section,
-                Year = obj.Year,
-                Department = obj.Department,
-                Course = obj.Course,
-                Specialization = obj.Specialization,
-                Batch = obj.Batch,
-                Backlogs = obj.Backlogs,
-                MatricPercentage = obj.MatricPercentage,
-                InterPercentage = obj.InterPercentage,
-                DiplomaPercentage = obj.DiplomaPercentage,
-                GraduationPercentage = obj.GraduationPercentage,
-                PostGraduationPercentage = obj.PostGraduationPercentage,
-                ParentName = obj.ParentName,
-                ParentContact = obj.ParentContact,
-                Skills = obj.Skills,
-                Project = obj.Project,
-                GitHubProfile = obj.GitHubProfile,
-                LinkedInProfile = obj.LinkedInProfile,
-                Resume = obj.Resume,
-                DOB = obj.DOB,
-                Gender = obj.Gender,
-                Nationality = obj.Nationality,
-                CGPA = obj.CGPA,
-                Certifications = obj.Certifications,
-                InternshipExperience = obj.InternshipExperience,
-                ExtracurricularActivities = obj.ExtracurricularActivities,
-                LanguagesKnown = obj.LanguagesKnown,
-                PreferredJobLocation = obj.PreferredJobLocation,
-                WorkAuthorization = obj.WorkAuthorization,
-                ExpectedSalary = obj.ExpectedSalary,
-                IsPlaced = obj.IsPlaced,
-                PlacedCompany = obj.PlacedCompany,
-                PlacementDate = obj.PlacementDate,
-                AdditionalNotes = obj.AdditionalNotes,
-            };
-
-            // Add student to the database
-            _unitOfWork.StudentData.Add(student);
+            // If no existing record, create a new one
+            obj.UserId = userId;
+            _unitOfWork.StudentData.Add(obj);
             _unitOfWork.Save();
 
             TempData["success"] = "The Registration has been done successfully.";
             return RedirectToAction("UserProfile", "Account");
-        }
-        public IActionResult StudentDataUpdate(int studentId)
-        {
-            Student? obj = _unitOfWork.StudentData.Get(u => u.StudentId == studentId);
-            if (obj == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-            return View(obj);
-        }
-
-
-        [HttpPost]
-        public IActionResult StudentDataUpdate(Student obj)
-        {
-            if ( obj.StudentId > 0)
-            {
-                
-                _unitOfWork.StudentData.Update(obj);
-                _unitOfWork.Save();
-
-                TempData["success"] = "The Registration has been updated successfully.";
-                return RedirectToAction("Index", "Home");
-            }
-            return View(obj);
         }
 
         #region API CALLS

@@ -30,6 +30,15 @@
                 <!-- Blog Details Section -->
                 <section id="blog-details" class="blog-details section">
                     <div class="container">
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success">@TempData["Success"]</div>
+                        }
+
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
                         <article class="article">
                             <div class="post-img">
                                 <img src="@Model.BlogPost.BlogThumbnail" alt="@Model.BlogPost.Title" class="img-fluid">
@@ -62,26 +71,37 @@
                                         <li><strong>Application Deadline:</strong> @Model.BlogPost.ApplicationDeadline</li>
                                         <li><strong>Year Gap Allowed:</strong> @(Model.BlogPost.HasYearGap ? "Yes" : "No")</li>
                                     </ul>
-                                    <!-- User Eligibility Status -->
                                     @if (User.IsInRole(SD.Role_Student) && Model.Student != null)
                                     {
                                         <h4>Your Eligibility Status</h4>
+
                                         @if (Model.Student.Batch == Model.BlogPost.Batch &&
                                        Model.Student.Course == Model.BlogPost.Course &&
                                        Model.Student.CGPA >= Model.BlogPost.MinimumCGPA &&
                                        Model.Student.MatricPercentage >= Model.BlogPost.MinimumMatricPercentage &&
                                        Model.Student.InterPercentage >= Model.BlogPost.MinimumInterPercentage &&
-                                       Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage &&
-                                       Model.Student.PostGraduationPercentage <= Model.BlogPost.MaximumPostGraduationCGPA)
+                                       Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage)
                                         {
-                                            <p class="text-success">🎉Congratulations! You are eligible for this drive.</p>
+                                            <p class="text-success">🎉 Congratulations! You are eligible for this drive.</p>
+
+                                            <!-- Apply Now Button -->
+                                            @if (!Model.HasAlreadyApplied)
+                                            {
+                                                <form method="post" asp-action="Apply" asp-controller="Blog">
+                                                    <input type="hidden" name="postId" value="@Model.BlogPost.PostId" />
+                                                    <button type="submit" class="btn btn-primary">Apply Now</button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-info">✅ You have already applied for this drive.</p>
+                                            }
                                         }
                                         else
                                         {
                                             <p class="text-danger">❌ Sorry, you do not meet the eligibility criteria for this drive.</p>
                                         }
                                     }
-
                                 </div>
                             </section><!-- /Eligibility Criteria Section -->
                             <div class="meta-bottom">

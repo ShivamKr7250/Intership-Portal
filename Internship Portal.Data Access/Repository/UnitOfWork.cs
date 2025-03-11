@@ -17,6 +17,7 @@ namespace Internship_Portal.Data_Access.Repository
         public IInteractionRepository Interaction { get; private set; }
         public IBlogCategoryRepository BlogCategory { get; private set; }
         public IStudentDataRepository StudentData { get; private set; }
+        public IAppliedDriveRepository AppliedDrive { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -30,6 +31,7 @@ namespace Internship_Portal.Data_Access.Repository
             Interaction = new InteractionRepository(_db);
             BlogCategory = new BlogCategoryRepository(_db);
             StudentData = new StudentDataRepository(_db);
+            AppliedDrive = new AppliedDriveRepository(_db);
         }
 
         public void Save()
