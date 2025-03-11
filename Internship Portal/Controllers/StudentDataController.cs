@@ -106,11 +106,35 @@ namespace Internship_Portal.Controllers
             TempData["success"] = "The Registration has been done successfully.";
             return RedirectToAction("UserProfile", "Account");
         }
+        public IActionResult StudentDataUpdate(int studentId)
+        {
+            Student? obj = _unitOfWork.StudentData.Get(u => u.StudentId == studentId);
+            if (obj == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return View(obj);
+        }
+
+
+        [HttpPost]
+        public IActionResult StudentDataUpdate(Student obj)
+        {
+            if (ModelState.IsValid && obj.StudentId > 0)
+            {
+                _unitOfWork.StudentData.Update(obj);
+                _unitOfWork.Save();
+
+                TempData["success"] = "The Registration has been updated successfully.";
+                return RedirectToAction("Index", "Home");
+            }
+            return View(obj);
+        }
 
         #region API CALLS
         [HttpGet]
         [Authorize]
-        public IActionResult GetAll(string status, int? year, bool? isPlaced, char? section, int? batch, string skills, int draw, int start, int length)
+        public IActionResult GetAll(char? year, bool? isPlaced, char? section, int? batch, string skills, int draw, int start, int length)
         {
             var query = _unitOfWork.StudentData.GetAll();
 
@@ -128,7 +152,7 @@ namespace Internship_Portal.Controllers
             }
             if (isPlaced.HasValue)
             {
-                query = query.Where(u => u.IsPlaced == isPlaced.Value);
+                query = query.Where(u => u.IsPlaced == isPlaced);
             }
             if (section.HasValue)
             {
@@ -165,13 +189,13 @@ namespace Internship_Portal.Controllers
         [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Delete(int? id)
         {
-            var RegistrationToBeDeleted = _unitOfWork.RegistrationForm.Get(u => u.ID == id);
-            if (RegistrationToBeDeleted == null)
+            var StudentDataToBeDeleted = _unitOfWork.StudentData.Get(u => u.StudentId == id);
+            if (StudentDataToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error while deleting" });
             }
 
-            _unitOfWork.RegistrationForm.Remove(RegistrationToBeDeleted);
+            _unitOfWork.StudentData.Remove(StudentDataToBeDeleted);
             _unitOfWork.Save();
 
             return Json(new { success = true, message = "Deleted Successful" });

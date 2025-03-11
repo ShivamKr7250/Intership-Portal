@@ -96,7 +96,7 @@ namespace Internship_Portal.Controllers
                     Email = registerVM.Email,
                     PhoneNumber = registerVM.PhoneNumber,
                     NormalizedEmail = registerVM.Email.ToUpper(),
-                    EmailConfirmed = false,
+                    EmailConfirmed = true,
                     UserName = registerVM.Email,
                     CreatedAt = DateTime.Now
                 };
@@ -160,11 +160,15 @@ namespace Internship_Portal.Controllers
 
                     if (result.Succeeded)
                     {
+                        if (await _userManager.IsInRoleAsync(user, SD.Role_Admin))
+                        {
+                            return RedirectToAction("Index", "Dashboard");
+                        }
                         if (!string.IsNullOrEmpty(model.RedirectUrl) && Url.IsLocalUrl(model.RedirectUrl))
                         {
                             return Redirect(model.RedirectUrl);
                         }
-
+                        
                         return RedirectToAction("Index", "Home");
                     }
 
