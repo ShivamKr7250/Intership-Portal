@@ -20,7 +20,7 @@
             @foreach (var post in Model)
             {
                 <div class="post-item">
-                    <img src="@post.BlogThumnail" alt="@post.Title" class="flex-shrink-0" style="width: 100px; height: auto;">
+                    <img src="@post.BlogThumbnail" alt="@post.Title" class="flex-shrink-0" style="width: 100px; height: auto;">
                     <div>
                         <h4><a href="@Url.Action("Details", "Blog", new { id = post.PostId })">@post.Title</a></h4>
                         <time datetime="@post.PublicationDate.ToString("yyyy-MM-dd")">@post.PublicationDate.ToShortDateString()</time>

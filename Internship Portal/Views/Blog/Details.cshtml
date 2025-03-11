@@ -25,14 +25,14 @@
 
     <div class="container">
         <div class="row">
-            <a asp-asp-controller="Blog" asp-action="Index">Back to Blog</a>
+            <a asp-controller="Blog" asp-action="Index">Back to Blog</a>
             <div class="col-lg-12">
                 <!-- Blog Details Section -->
                 <section id="blog-details" class="blog-details section">
                     <div class="container">
                         <article class="article">
                             <div class="post-img">
-                                <img src="@Model.BlogPost.BlogThumnail" alt="@Model.BlogPost.Title" class="img-fluid">
+                                <img src="@Model.BlogPost.BlogThumbnail" alt="@Model.BlogPost.Title" class="img-fluid">
                             </div>
                             <h2 class="title">@Model.BlogPost.Title</h2>
 
@@ -47,7 +47,43 @@
                             <div class="content">
                                 @Html.Raw(Model.BlogPost.Content)
                             </div><!-- End post content -->
+                            <!-- Eligibility Criteria Section -->
+                            <section id="eligibility-criteria" class="eligibility-criteria section">
+                                <div class="container">
+                                    <h3>Eligibility Criteria</h3>
+                                    <ul>
+                                        <li><strong>Batch:</strong> @Model.BlogPost.Batch</li>
+                                        <li><strong>Course:</strong> @Model.BlogPost.Course</li>
+                                        <li><strong>Minimum CGPA:</strong> @Model.BlogPost.MinimumCGPA</li>
+                                        <li><strong>Minimum Matric Percentage:</strong> @Model.BlogPost.MinimumMatricPercentage%</li>
+                                        <li><strong>Minimum Intermediate Percentage:</strong> @Model.BlogPost.MinimumInterPercentage%</li>
+                                        <li><strong>Minimum Graduation Percentage:</strong> @Model.BlogPost.MinimumGraduationPercentage%</li>
+                                       @*  <li><strong>Maximum Post Graduation CGPA:</strong> @Model.BlogPost.MaximumPostGraduationCGPA%</li> *@
+                                        <li><strong>Application Deadline:</strong> @Model.BlogPost.ApplicationDeadline</li>
+                                        <li><strong>Year Gap Allowed:</strong> @(Model.BlogPost.HasYearGap ? "Yes" : "No")</li>
+                                    </ul>
+                                    <!-- User Eligibility Status -->
+                                    @if (User.IsInRole(SD.Role_Student) && Model.Student != null)
+                                    {
+                                        <h4>Your Eligibility Status</h4>
+                                        @if (Model.Student.Batch == Model.BlogPost.Batch &&
+                                       Model.Student.Course == Model.BlogPost.Course &&
+                                       Model.Student.CGPA >= Model.BlogPost.MinimumCGPA &&
+                                       Model.Student.MatricPercentage >= Model.BlogPost.MinimumMatricPercentage &&
+                                       Model.Student.InterPercentage >= Model.BlogPost.MinimumInterPercentage &&
+                                       Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage &&
+                                       Model.Student.PostGraduationPercentage <= Model.BlogPost.MaximumPostGraduationCGPA)
+                                        {
+                                            <p class="text-success">🎉Congratulations! You are eligible for this drive.</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-danger">❌ Sorry, you do not meet the eligibility criteria for this drive.</p>
+                                        }
+                                    }
 
+                                </div>
+                            </section><!-- /Eligibility Criteria Section -->
                             <div class="meta-bottom">
                                 <i class="bi bi-folder"></i>
                                 <ul class="cats">
@@ -57,17 +93,17 @@
                                 <ul class="tags">
                                     @if (Model.BlogPost.Tags != null)
                                     {
-                                    foreach (var tag in Model.BlogPost.Tags.Split(','))
-                                    {
-                                    <li><a href="#">@tag.Trim()</a></li>
-                                    }
+                                        foreach (var tag in Model.BlogPost.Tags.Split(','))
+                                        {
+                                            <li><a href="#">@tag.Trim()</a></li>
+                                        }
                                     }
                                 </ul>
                             </div><!-- End meta bottom -->
-
                         </article>
                     </div>
                 </section><!-- /Blog Details Section -->
+                
                 <!-- Blog Author Section -->
                 <section id="blog-author" class="blog-author section">
                     <div class="container">
@@ -92,18 +128,18 @@
                         <h4 class="comments-count">@Model.BlogPost.Comments.Count() Comments</h4>
                         @foreach (var comment in Model.Comments)
                         {
-                        <div id="comment-@comment.CommentId" class="comment">
-                        <div class="d-flex">
-                        <div class="comment-img"><img src="@comment.ApplicationUser.ProfilePicture" alt="User"></div>
-                        <div>
-                        <h5><a href="#">@comment.ApplicationUser.Name</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
-                        <time datetime="@comment.Timestamp.ToString("yyyy-MM-dd")">@comment.Timestamp.ToString("MMM dd, yyyy")</time>
-                        <p>@comment.Content</p>
-                        </div>
-                        </div>
-                        </div>
+                            <div id="comment-@comment.CommentId" class="comment">
+                                <div class="d-flex">
+                                    <div class="comment-img"><img src="@comment.ApplicationUser.ProfilePicture" alt="User"></div>
+                                    <div>
+                                        <h5><a href="#">@comment.ApplicationUser.Name</a> <a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
+                                        <time datetime="@comment.Timestamp.ToString("yyyy-MM-dd")">@comment.Timestamp.ToString("MMM dd, yyyy")</time>
+                                        <p>@comment.Content</p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- End comment -->
+                            <!-- End comment -->
                         }
                     </div>
                 </section><!-- /Blog Comments Section -->
@@ -125,11 +161,8 @@
                         </form>
                     </div>
                 </section><!-- /Comment Form Section -->
+
             </div>
-
-            <!-- Blog Sidebar -->
-           @*  <partial name="_BlogSideBar" /> *@
-
         </div>
     </div>
 </main>

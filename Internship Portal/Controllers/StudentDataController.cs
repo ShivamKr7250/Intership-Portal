@@ -56,6 +56,7 @@ namespace Internship_Portal.Controllers
             // Creating a new Student object
             Student student = new Student
             {
+                UserId = userId,
                 RollNumber = obj.RollNumber,
                 Name = obj.Name,
                 Email = obj.Email,
@@ -120,8 +121,9 @@ namespace Internship_Portal.Controllers
         [HttpPost]
         public IActionResult StudentDataUpdate(Student obj)
         {
-            if (ModelState.IsValid && obj.StudentId > 0)
+            if ( obj.StudentId > 0)
             {
+                
                 _unitOfWork.StudentData.Update(obj);
                 _unitOfWork.Save();
 

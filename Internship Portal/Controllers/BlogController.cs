@@ -142,7 +142,7 @@ namespace Internship_Portal.Controllers
                     model.BlogPost.Image.CopyTo(fileStream);
                 }
 
-                model.BlogPost.BlogThumnail = @"\images\blogThumbnails\" + fileName;
+                model.BlogPost.BlogThumbnail = @"\images\blogThumbnails\" + fileName;
             }
 
             // Handle tags functionality
@@ -182,6 +182,15 @@ namespace Internship_Portal.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userDetail = _unitOfWork.User.Get(u => u.Id == userId);
 
+            // Initialize Student as null
+            Student studentDetail = null;
+
+            // Check if the user has the "Student" role
+            if (User.IsInRole(SD.Role_Student))
+            {
+                studentDetail = _unitOfWork.StudentData.Get(s => s.UserId == userId);
+            }
+
             var model = new BlogVM
             {
                 BlogPost = blogDetails,
@@ -200,11 +209,13 @@ namespace Internship_Portal.Controllers
                     Content = comment.Content, // Assuming you have a Content property
                     Timestamp = comment.Timestamp // Assuming you have a Timestamp or similar property
                 }).ToList(), // Convert to List to fit IEnumerable<BlogComment>
-                User = userDetail
+                User = userDetail,
+                Student = studentDetail // Include student details
             };
 
             return View(model);
         }
+
 
 
         [HttpPost]

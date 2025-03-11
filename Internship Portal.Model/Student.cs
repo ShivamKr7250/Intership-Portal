@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Internship_Portal.Model
 {
@@ -6,6 +7,12 @@ namespace Internship_Portal.Model
     {
         [Key]
         public int StudentId { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public ApplicationUser? ApplicationUser { get; set; }
 
         [Required]
         public int RollNumber { get; set; }
