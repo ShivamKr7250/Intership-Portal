@@ -52,6 +52,42 @@ $(document).ready(function () {
         console.log("Apply button clicked! Reloading table...");
         dataTable.ajax.reload(); // Refresh DataTable with new filter values
     });
+
+    // ✅ Export to Excel
+    $('#exportExcel').click(function () {
+        let filters = {
+            date: $('#filterDate').val(),
+            company: $('#filterCompany').val(),
+            course: $('#filterCourse').val() || null,
+            batch: $('#filterBatch').val() ? parseInt($('#filterBatch').val()) : null,
+            rollNumber: $('#filterStudent').val() || null
+        };
+
+        $.ajax({
+            url: "/appliedDrive/export",
+            type: "POST",
+            data: JSON.stringify(filters),
+            contentType: "application/json",
+            xhrFields: {
+                responseType: 'blob'  // Expecting a file (binary response)
+            },
+            success: function (data, status, xhr) {
+                let filename = xhr.getResponseHeader('Content-Disposition').split('filename=')[1].trim();
+                let blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                let link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                toastr.success("Excel file downloaded successfully.");
+            },
+            error: function (xhr, error, thrown) {
+                console.error('Error exporting data: ', error);
+                toastr.error('Failed to export data.');
+            }
+        });
+    });
 });
 
 // ✅ Delete Function with Global Access to dataTable
