@@ -21,6 +21,7 @@ namespace Internship_Portal.Data_Access.Data
         public DbSet<BlogCategory> BlogCategories { get; set; }
         public DbSet<Student> StudentsData { get; set; }
         public DbSet<AppliedDrive> AppliedDrive { get; set; }
+        public DbSet<MentorAllocation> MentorAllocations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -83,6 +84,18 @@ namespace Internship_Portal.Data_Access.Data
                 .WithMany()
                 .HasForeignKey(a => a.DriveId)
                 .OnDelete(DeleteBehavior.Cascade); // 🔹 Keeps cascade delete on BlogPost
+
+            modelBuilder.Entity<MentorAllocation>()
+           .HasOne(ma => ma.Mentor)
+           .WithMany()
+           .HasForeignKey(ma => ma.UserId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<MentorAllocation>()
+                .HasOne(ma => ma.Student)
+                .WithMany()
+                .HasForeignKey(ma => ma.StudentId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
 

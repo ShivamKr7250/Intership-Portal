@@ -1,20 +1,6 @@
 ﻿@model BlogVM
 
-@{
-    // Convert eligible courses (from BlogPost) into a list
-    var eligibleCourses = Model.BlogPost.Course.Split(',').Select(c => c.Trim()).ToList();
 
-    // Check if the student's course is in the list of eligible courses
-    bool isCourseEligible = eligibleCourses.Contains(Model.Student.Course, StringComparer.OrdinalIgnoreCase);
-
-    // Check all other eligibility criteria
-    bool meetsCriteria = Model.Student.Batch == Model.BlogPost.Batch &&
-                         isCourseEligible &&
-                         Model.Student.CGPA >= Model.BlogPost.MinimumCGPA &&
-                         Model.Student.MatricPercentage >= Model.BlogPost.MinimumMatricPercentage &&
-                         Model.Student.InterPercentage >= Model.BlogPost.MinimumInterPercentage &&
-                         Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage;
-}
 
 <main class="main" style="margin-top: 7rem;">
     <!-- Page Title -->
@@ -91,6 +77,21 @@
                                     {
                                         <h4>Your Eligibility Status</h4>
 
+
+        // Convert eligible courses (from BlogPost) into a list
+        var eligibleCourses = Model.BlogPost.Course.Split(',').Select(c => c.Trim()).ToList();
+
+        // Check if the student's course is in the list of eligible courses
+        bool isCourseEligible = eligibleCourses.Contains(Model.Student.Course, StringComparer.OrdinalIgnoreCase);
+    
+        // Check all other eligibility criteria
+        bool meetsCriteria = Model.Student.Batch == Model.BlogPost.Batch &&
+                             isCourseEligible &&
+                             Model.Student.CGPA >= Model.BlogPost.MinimumCGPA &&
+                             Model.Student.MatricPercentage >= Model.BlogPost.MinimumMatricPercentage &&
+                             Model.Student.InterPercentage >= Model.BlogPost.MinimumInterPercentage &&
+                             Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage;
+    
 
                                         @if (meetsCriteria)
                                         {

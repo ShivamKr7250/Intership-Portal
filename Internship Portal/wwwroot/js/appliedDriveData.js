@@ -31,10 +31,7 @@ $(document).ready(function () {
                 data: 'userId',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                        <a href="/studentData/studentDataRegistration?userId=${data}" class="btn btn-outline-warning mx-2">
-                            <i class="bi bi-pencil-square"></i> Details
-                        </a>
-                        <a onClick="Delete('/studentData/delete/${data}')" class="btn btn-outline-danger mx-2">
+                        <a onClick="Delete('/appliedDrive/delete/${data}')" class="btn btn-outline-danger mx-2">
                             <i class="bi bi-trash-fill"></i> Delete
                         </a>
                     </div>`;

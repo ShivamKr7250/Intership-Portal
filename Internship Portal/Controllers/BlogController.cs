@@ -14,6 +14,7 @@ using Internship_Portal.Utility;
 using Microsoft.EntityFrameworkCore;
 using SkiaSharp;
 using Microsoft.AspNetCore.Identity;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Internship_Portal.Controllers
 {
@@ -360,7 +361,11 @@ namespace Internship_Portal.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var blogPosts = _unitOfWork.BlogPost.GetAll(includeProperties: "BlogCategory,ApplicationUser")
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Fetch only the blog posts created by the specific user
+            var blogPosts = _unitOfWork.BlogPost
+                .GetAll(b => b.UserId == userId, includeProperties: "BlogCategory,ApplicationUser")
                 .Select(post => new
                 {
                     post.PostId,
@@ -369,10 +374,12 @@ namespace Internship_Portal.Controllers
                     post.PublicationDate,
                     CategoryName = post.BlogCategory != null ? post.BlogCategory.Name : "Uncategorized",
                     post.CompanyName
-                }).ToList();
+                })
+                .ToList();
 
             return Json(new { data = blogPosts });
         }
+
 
 
         [HttpDelete]

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet">
+    rel="stylesheet">
     <title>@ViewData["Title"] - Internship_Portal</title>
 
     <!-- Favicons -->
@@ -17,7 +17,7 @@
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-  
+
 
     <!-- Vendor CSS Files -->
     <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -44,68 +44,30 @@
 
             <a asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center me-auto">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
-               @*  <img src="~/assets/img/logo.svg" alt=""> *@
-                <h1 class="sitename">MM(DU) Career Portal</h1>
+                <img src="~/assets/img/logo.png" alt="">
+                <h2 class="sitename">Career Portal</h2>
             </a>
 
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a asp-controller="Home" asp-action="Index">Home<br></a></li>
-                    <li><a asp-controller="Blog" asp-action="Index">Updates</a></li>
-                   @*  <li><a asp-controller="Home" asp-action="Team">Team</a></li> *@
-                   
-                    
+                    <li><a asp-controller="Blog" asp-action="Index">Drive</a></li>
+                    @if (User.IsInRole(SD.Role_TNP))
+                    {
+                        <li><a asp-controller="Blog" asp-action="BlogIndex">Drive List</a></li>
+                    }
+                    @if (User.IsInRole(SD.Role_TNP) || User.IsInRole(SD.Role_Mentor))
+                    {
+                        <li><a asp-controller="StudentData" asp-action="Index">Student List</a></li>
+                    }
                     <li class="dropdown">
                         <a><span>Career</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a asp-controller="Home" asp-action="Internship">Internship</a></li>
-                            <li><a asp-controller="" asp-action="">Placement</a></li>
+                            <li><a asp-controller="AppliedDrive" asp-action="Index">Manage Drive</a></li>
                             <li><a asp-controller="Student" asp-action="Index">Manage Internship</a></li>
-                            @* <li class="dropdown">
-                                <a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                                <ul>
-                                    <li><a href="#">Deep Dropdown 1</a></li>
-                                    <li><a href="#">Deep Dropdown 2</a></li>
-                                    <li><a href="#">Deep Dropdown 3</a></li>
-                                    <li><a href="#">Deep Dropdown 4</a></li>
-                                    <li><a href="#">Deep Dropdown 5</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Dropdown 2</a></li>
-                            <li><a href="#">Dropdown 3</a></li>
-                            <li><a href="#">Dropdown 4</a></li> *@
                         </ul>
                     </li>
-                    @* <li class="listing-dropdown">
-                        <a href="#"><span>Listing Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                        <ul>
-                            <li>
-                                <a href="#">Column 1 link 1</a>
-                                <a href="#">Column 1 link 2</a>
-                                <a href="#">Column 1 link 3</a>
-                            </li>
-                            <li>
-                                <a href="#">Column 2 link 1</a>
-                                <a href="#">Column 2 link 2</a>
-                                <a href="#">Column 3 link 3</a>
-                            </li>
-                            <li>
-                                <a href="#">Column 3 link 1</a>
-                                <a href="#">Column 3 link 2</a>
-                                <a href="#">Column 3 link 3</a>
-                            </li>
-                            <li>
-                                <a href="#">Column 4 link 1</a>
-                                <a href="#">Column 4 link 2</a>
-                                <a href="#">Column 4 link 3</a>
-                            </li>
-                            <li>
-                                <a href="#">Column 5 link 1</a>
-                                <a href="#">Column 5 link 2</a>
-                                <a href="#">Column 5 link 3</a>
-                            </li>
-                        </ul>
-                    </li> *@
                     <partial name="_LoginPartial" />
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>

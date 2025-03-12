@@ -31,11 +31,18 @@ namespace Internship_Portal.Controllers
             IEnumerable<AppliedDrive> query;
             query = _unitOfWork.AppliedDrive.GetAll(includeProperties: "BlogPost,Student");
 
-            if (!User.IsInRole(SD.Role_Admin))
+            if (User.IsInRole(SD.Role_Student))
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 query = query.Where(u => u.Student.UserId == userId);
+            }
+
+            if (User.IsInRole(SD.Role_TNP))
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                query = query.Where(u => u.BlogPost.UserId == userId);
             }
 
             // Apply filtering

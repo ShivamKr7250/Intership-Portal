@@ -18,6 +18,7 @@ namespace Internship_Portal.Data_Access.Repository.IRepository
         IBlogCategoryRepository BlogCategory { get; }
         IStudentDataRepository StudentData { get; }
         IAppliedDriveRepository AppliedDrive { get; }
+        IMentorAllocationRepository MentorAllocation { get; }
         void Save();
     }
 }

@@ -119,7 +119,7 @@ namespace Internship_Portal.Controllers
         {
             var query = _unitOfWork.StudentData.GetAll();
 
-            if (!User.IsInRole(SD.Role_Admin))
+            if (User.IsInRole(SD.Role_Student))
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;

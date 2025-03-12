@@ -18,6 +18,7 @@ namespace Internship_Portal.Data_Access.Repository
         public IBlogCategoryRepository BlogCategory { get; private set; }
         public IStudentDataRepository StudentData { get; private set; }
         public IAppliedDriveRepository AppliedDrive { get; private set; }
+        public IMentorAllocationRepository MentorAllocation { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -32,6 +33,7 @@ namespace Internship_Portal.Data_Access.Repository
             BlogCategory = new BlogCategoryRepository(_db);
             StudentData = new StudentDataRepository(_db);
             AppliedDrive = new AppliedDriveRepository(_db);
+            MentorAllocation = new MentorAllocationRepository(_db);
         }
 
         public void Save()
