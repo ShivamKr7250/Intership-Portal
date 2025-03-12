@@ -17,32 +17,38 @@
                         {
                             <div class="alert alert-success">@TempData["success"]</div>
                         }
-                        
+
                         <form asp-action="StudentDataRegistration" asp-controller="StudentData" method="post">
-                            <div asp-validation-summary="All"></div>
+                            <div class="text-danger" asp-validation-summary="All"></div>
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="RollNumber" type="text" class="form-control form-control-lg" required />
                                         <label class="form-label">Roll Number</label>
+                                        <input asp-for="RollNumber" type="text" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="RollNumber" class="text-danger"></span>
                                     </div>
+
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="Name" type="text" class="form-control form-control-lg" required />
                                         <label class="form-label">Full Name</label>
+                                        <input asp-for="Name" type="text" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="ParentName" type="text" class="form-control form-control-lg" required />
                                         <label class="form-label">Parent Name</label>
+                                        <input asp-for="ParentName" type="text" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="ParentName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="ParentContact" type="text" class="form-control form-control-lg" required />
                                         <label class="form-label">Parent Contact</label>
+                                        <input asp-for="ParentContact" type="text" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="ParentContact" class="text-danger"></span>
+
                                     </div>
                                 </div>
                             </div>
@@ -50,8 +56,9 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="DOB" type="date" class="form-control form-control-lg" required />
                                         <label class="form-label">Date of Birth</label>
+                                        <input asp-for="DOB" type="date" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="DOB" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
@@ -68,6 +75,7 @@
                                         <input asp-for="Gender" class="form-check-input" type="radio" value="Other" />
                                         <label class="form-check-label">Other</label>
                                     </div>
+                                    <span asp-validation-for="DOB" class="text-danger"></span>
                                 </div>
                             </div>
 
@@ -75,20 +83,23 @@
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="Email" type="email" class="form-control form-control-lg" required />
                                         <label class="form-label">Email</label>
+                                        <input asp-for="Email" type="email" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="Contact" type="tel" class="form-control form-control-lg" required />
                                         <label class="form-label">Phone Number</label>
+                                        <input asp-for="Contact" type="tel" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="Contact" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <div class="form-outline">
-                                        <input asp-for="Nationality" type="text" class="form-control form-control-lg" required />
                                         <label class="form-label">Nationality</label>
+                                        <input asp-for="Nationality" type="text" class="form-control form-control-lg" required />
+                                        <span asp-validation-for="Nationality" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -96,30 +107,62 @@
                             <h5>Address Details</h5>
                             <div class="row">
                                 <div class="col-md-4 mb-4">
-                                    <input asp-for="Address" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Address</label>
+                                    <input asp-for="Address" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                    <input asp-for="City" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">City</label>
+                                    <input asp-for="City" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="City" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                    <input asp-for="State" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">State</label>
+                                    <input asp-for="State" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="State" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <h5>Academic Details</h5>
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Department" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Department</label>
+                                    <input asp-for="Department" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Department" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Course" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Course</label>
+                                    <select asp-for="Course" class="form-control form-control-lg" required>
+                                        <option value="">Select Course</option>
+                                        <option value="B.Tech">B.Tech</option>
+                                        <option value="B.Sc">B.Sc</option>
+                                        <option value="B.Com">B.Com</option>
+                                        <option value="BBA">BBA</option>
+                                        <option value="BA">BA</option>
+                                        <option value="BCA">BCA</option>
+                                        <option value="M.Tech">M.Tech</option>
+                                        <option value="M.Sc">M.Sc</option>
+                                        <option value="M.Com">M.Com</option>
+                                        <option value="MBA">MBA</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MCA">MCA</option>
+                                        <option value="PhD">PhD</option>
+                                        <option value="Diploma">Diploma</option>
+                                        <option value="B.Pharm">B.Pharm</option>
+                                        <option value="M.Pharm">M.Pharm</option>
+                                        <option value="LLB">LLB</option>
+                                        <option value="LLM">LLM</option>
+                                        <option value="MBBS">MBBS</option>
+                                        <option value="BDS">BDS</option>
+                                        <option value="BHM">BHM</option>
+                                        <option value="B.Ed">B.Ed</option>
+                                        <option value="M.Ed">M.Ed</option>
+                                    </select>
+                                    <span asp-validation-for="Course" class="text-danger"></span>
                                 </div>
+
                                 <div class="col-md-6 mb-4">
+                                    <label class="form-label">Section</label>
                                     <select asp-for="Section" class="form-control">
                                         <option value="" disabled selected>Select Section</option>
                                         <option value="A">A</option>
@@ -132,9 +175,10 @@
                                         <option value="H">H</option>
                                         <option value="I">I</option>
                                     </select>
-                                    <label class="form-label">Section</label>
+                                    <span asp-validation-for="Section" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
+                                    <label class="form-label">Year</label>
                                     <select asp-for="Year" class="form-control">
                                         <option value="" disabled selected>Select the Year</option>
                                         <option value="1">1st Year</option>
@@ -142,106 +186,151 @@
                                         <option value="3">3rd Year</option>
                                         <option value="4">4th Year</option>
                                     </select>
-                                    <label class="form-label">Year</label>
+                                    <span asp-validation-for="Year" class="text-danger"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Specialization" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Specialization</label>
+                                    <select asp-for="Specialization" class="form-control form-control-lg" required>
+                                        <option value="">Select Specialization</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Information Technology">Information Technology</option>
+                                        <option value="Electronics and Communication">Electronics and Communication</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="Electrical Engineering">Electrical Engineering</option>
+                                        <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+                                        <option value="Data Science">Data Science</option>
+                                        <option value="Cyber Security">Cyber Security</option>
+                                        <option value="Cloud Computing">Cloud Computing</option>
+                                        <option value="Biotechnology">Biotechnology</option>
+                                        <option value="Pharmaceutical Sciences">Pharmaceutical Sciences</option>
+                                        <option value="Business Analytics">Business Analytics</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Human Resource Management">Human Resource Management</option>
+                                        <option value="Law">Law</option>
+                                        <option value="Psychology">Psychology</option>
+                                        <option value="Hotel Management">Hotel Management</option>
+                                        <option value="Education">Education</option>
+                                    </select>
+                                    <span asp-validation-for="Specialization" class="text-danger"></span>
                                 </div>
+
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="MatricPercentage" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">10th Percentage</label>
+                                    <input asp-for="MatricPercentage" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="MatricPercentage" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="InterPercentage" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">12th Percentage</label>
+                                    <input asp-for="InterPercentage" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="InterPercentage" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="DiplomaPercentage" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">Diploma Percentage</label>
+                                    <input asp-for="DiplomaPercentage" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="DiplomaPercentage" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="GraduationPercentage" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">Graduation Percentage</label>
+                                    <input asp-for="GraduationPercentage" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="GraduationPercentage" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="PostGraduationPercentage" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">Post Graduation Percentage</label>
+                                    <input asp-for="PostGraduationPercentage" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="PostGraduationPercentage" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 mb-4">
-                                    <input asp-for="Batch" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">Batch</label>
+                                    <input asp-for="Batch" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Batch" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                    <input asp-for="CGPA" type="number" step="0.01" class="form-control form-control-lg" required />
                                     <label class="form-label">CGPA</label>
+                                    <input asp-for="CGPA" type="number" step="0.01" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="CGPA" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-4">
-                                    <input asp-for="Backlogs" type="number" class="form-control form-control-lg" required />
                                     <label class="form-label">Backlogs</label>
+                                    <input asp-for="Backlogs" type="number" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Backlogs" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <h5>Professional Details</h5>
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Skills" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Skills</label>
+                                    <input asp-for="Skills" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Skills" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Project" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Project</label>
+                                    <input asp-for="Project" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Project" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Certifications" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">Certifications</label>
+                                    <input asp-for="Certifications" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="Certifications" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="InternshipExperience" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">InternshipExperience</label>
+                                    <input asp-for="InternshipExperience" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="InternshipExperience" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="ExtracurricularActivities" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">ExtracurricularActivities</label>
+                                    <input asp-for="ExtracurricularActivities" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="ExtracurricularActivities" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="LanguagesKnown" type="text" class="form-control form-control-lg" required />
                                     <label class="form-label">LanguagesKnown</label>
+                                    <input asp-for="LanguagesKnown" type="text" class="form-control form-control-lg" required />
+                                    <span asp-validation-for="LanguagesKnown" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <h5>Additional Details</h5>
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="GitHubProfile" type="url" class="form-control form-control-lg" />
                                     <label class="form-label">GitHub Profile</label>
+                                    <input asp-for="GitHubProfile" type="text" class="form-control form-control-lg" />
+                                    <span asp-validation-for="GitHubProfile" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="LinkedInProfile" type="url" class="form-control form-control-lg" />
                                     <label class="form-label">LinkedIn Profile</label>
+                                    <input asp-for="LinkedInProfile" type="text" class="form-control form-control-lg" />
+                                    <span asp-validation-for="LinkedInProfile" class="text-danger"></span>
+
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="Resume" type="url" class="form-control form-control-lg" />
                                     <label class="form-label">Resume</label>
+                                    <input asp-for="Resume" type="text" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Resume" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="ExpectedSalary" type="number" class="form-control form-control-lg" />
                                     <label class="form-label">Expected Salary</label>
+                                    <input asp-for="ExpectedSalary" type="number" class="form-control form-control-lg" />
+                                    <span asp-validation-for="ExpectedSalary" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="PreferredJobLocation" type="text" class="form-control form-control-lg" />
                                     <label class="form-label">Preferred Job Location</label>
+                                    <input asp-for="PreferredJobLocation" type="text" class="form-control form-control-lg" />
+                                    <span asp-validation-for="PreferredJobLocation" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="WorkAuthorization" type="text" class="form-control form-control-lg" />
                                     <label class="form-label">Work Authorization</label>
+                                    <input asp-for="WorkAuthorization" type="text" class="form-control form-control-lg" />
+                                    <span asp-validation-for="WorkAuthorization" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label">Placed OR NOT</label>
@@ -249,24 +338,36 @@
                                         <option value="true">Yes</option>
                                         <option value="false">No</option>
                                     </select>
+                                    <span asp-validation-for="IsPlaced" class="text-danger"></span>
                                 </div>
 
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="PlacedCompany" type="text" class="form-control form-control-lg" />
                                     <label class="form-label">Placed Company</label>
+                                    <input asp-for="PlacedCompany" type="text" class="form-control form-control-lg" />
+                                    <span asp-validation-for="PlacedCompany" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <input asp-for="PlacementDate" type="date" class="form-control form-control-lg" />
                                     <label class="form-label">Placed Date</label>
+                                    <input asp-for="PlacementDate" type="date" class="form-control form-control-lg" />
+                                    <span asp-validation-for="PlacementDate" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6 mb-4">
-                                    <textarea asp-for="AdditionalNotes" class="form-control form-control-lg"></textarea>
                                     <label class="form-label">Additional Notes</label>
+                                    <textarea asp-for="AdditionalNotes" class="form-control form-control-lg"></textarea>
+                                    <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="mt-4 pt-2">
                                 <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
+                                @if(User.IsInRole(SD.Role_Admin)){
+                                    <a asp-controller="StudentData" asp-action="Index" class="btn btn-secondary btn-lg ms-3">Back to List</a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="UserProfile" class="btn btn-secondary btn-lg ms-3">Back to Home</a>
+                                }
+                               
                             </div>
                         </form>
 

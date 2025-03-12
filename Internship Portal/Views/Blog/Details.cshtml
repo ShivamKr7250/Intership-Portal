@@ -1,5 +1,21 @@
 ﻿@model BlogVM
 
+@{
+    // Convert eligible courses (from BlogPost) into a list
+    var eligibleCourses = Model.BlogPost.Course.Split(',').Select(c => c.Trim()).ToList();
+
+    // Check if the student's course is in the list of eligible courses
+    bool isCourseEligible = eligibleCourses.Contains(Model.Student.Course, StringComparer.OrdinalIgnoreCase);
+
+    // Check all other eligibility criteria
+    bool meetsCriteria = Model.Student.Batch == Model.BlogPost.Batch &&
+                         isCourseEligible &&
+                         Model.Student.CGPA >= Model.BlogPost.MinimumCGPA &&
+                         Model.Student.MatricPercentage >= Model.BlogPost.MinimumMatricPercentage &&
+                         Model.Student.InterPercentage >= Model.BlogPost.MinimumInterPercentage &&
+                         Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage;
+}
+
 <main class="main" style="margin-top: 7rem;">
     <!-- Page Title -->
     <div class="page-title">
@@ -67,7 +83,7 @@
                                         <li><strong>Minimum Matric Percentage:</strong> @Model.BlogPost.MinimumMatricPercentage%</li>
                                         <li><strong>Minimum Intermediate Percentage:</strong> @Model.BlogPost.MinimumInterPercentage%</li>
                                         <li><strong>Minimum Graduation Percentage:</strong> @Model.BlogPost.MinimumGraduationPercentage%</li>
-                                       @*  <li><strong>Maximum Post Graduation CGPA:</strong> @Model.BlogPost.MaximumPostGraduationCGPA%</li> *@
+                                        @*  <li><strong>Maximum Post Graduation CGPA:</strong> @Model.BlogPost.MaximumPostGraduationCGPA%</li> *@
                                         <li><strong>Application Deadline:</strong> @Model.BlogPost.ApplicationDeadline</li>
                                         <li><strong>Year Gap Allowed:</strong> @(Model.BlogPost.HasYearGap ? "Yes" : "No")</li>
                                     </ul>
@@ -75,12 +91,8 @@
                                     {
                                         <h4>Your Eligibility Status</h4>
 
-                                        @if (Model.Student.Batch == Model.BlogPost.Batch &&
-                                       Model.Student.Course == Model.BlogPost.Course &&
-                                       Model.Student.CGPA >= Model.BlogPost.MinimumCGPA &&
-                                       Model.Student.MatricPercentage >= Model.BlogPost.MinimumMatricPercentage &&
-                                       Model.Student.InterPercentage >= Model.BlogPost.MinimumInterPercentage &&
-                                       Model.Student.GraduationPercentage >= Model.BlogPost.MinimumGraduationPercentage)
+
+                                        @if (meetsCriteria)
                                         {
                                             <p class="text-success">🎉 Congratulations! You are eligible for this drive.</p>
 
@@ -102,6 +114,7 @@
                                             <p class="text-danger">❌ Sorry, you do not meet the eligibility criteria for this drive.</p>
                                         }
                                     }
+
                                 </div>
                             </section><!-- /Eligibility Criteria Section -->
                             <div class="meta-bottom">
@@ -123,7 +136,6 @@
                         </article>
                     </div>
                 </section><!-- /Blog Details Section -->
-                
                 <!-- Blog Author Section -->
                 <section id="blog-author" class="blog-author section">
                     <div class="container">

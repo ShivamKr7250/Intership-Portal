@@ -125,10 +125,10 @@
                     </div>
                     <div class="mt-5 text-center">
                         <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                        <a asp-controller="StudentData" asp-action="StudentDataRegistration" asp-route-userId="@Model.Id" class="btn btn-secondary ms-3">Student Data</a>
                     </div>
                 </div>
             </div>
-            <a asp-controller="StudentData" asp-action="StudentDataRegistration" asp-route-userId="@Model.Id">Student Data</a>
         </div>
     </form>
 </div>

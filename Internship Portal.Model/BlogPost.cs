@@ -28,6 +28,9 @@ namespace Internship_Portal.Model
         public string Title { get; set; }
 
         [Required]
+        public string CompanyName { get; set; }
+
+        [Required]
         [StringLength(400)]
         public string ShortDescription { get; set; }
 

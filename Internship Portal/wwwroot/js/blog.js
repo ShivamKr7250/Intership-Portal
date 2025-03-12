@@ -16,9 +16,10 @@ function loadDataTable(status) {
         },
         "columns": [
             { data: 'title', "width": "20%" },
-            { data: 'authorName', "width": "20%" },
-            { data: 'publicationDate', "width": "20%" },
-            { data: 'categoryId', "width": "10%" },
+            { data: 'authorName', "width": "15%" },
+            { data: 'publicationDate', "width": "15%" },
+            { data: 'categoryId', "width": "15%" },
+            { data: 'companyName', "width": "15%" },
             {
                 data: 'postId',
                 "render": function (data) {
@@ -31,7 +32,7 @@ function loadDataTable(status) {
                         </a>
                     </div>`;
                 },
-                "width": "30%"
+                "width": "20%"
             }
         ],
         "language": {

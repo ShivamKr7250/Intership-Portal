@@ -1,18 +1,18 @@
 ﻿var dataTable; // Declare globally
 
 $(document).ready(function () {
-    dataTable = $('#tblBookings').DataTable({  // Initialize it inside document ready
+    dataTable = $('#tblAppliedDrive').DataTable({  // Initialize it inside document ready
         "processing": true,
         "serverSide": true,
         "ajax": {
-            url: "/studentData/getall",
+            url: "/appliedDrive/getall",
             type: "GET",
             data: function (d) {
-                d.year = $('#filterYear').val() ? parseInt($('#filterYear').val()) : null;
-                d.placed = $('#filterPlaced').val();
-                d.section = $('#filterSection').val() || null;
+                d.date = $('#filterDate').val();
+                d.company = $('#filterCompany').val();
+                d.course = $('#filterCourse').val() || null;
                 d.batch = $('#filterBatch').val() ? parseInt($('#filterBatch').val()) : null;
-                d.skills = $('#filterSkills').val() || null;
+                d.rollNumber = $('#filterStudent').val() || null;
             },
             error: function (xhr, error, thrown) {
                 console.error('Error loading data: ', error);
@@ -20,13 +20,13 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { data: 'name', "width": "10%" },
-            { data: 'email', "width": "10%" },
-            { data: 'rollNumber', "width": "15%" },
-            { data: 'year', "width": "5%" },
-            { data: 'section', "width": "5%" },
-            { data: 'batch', "width": "10%" },
-            { data: 'skills', "width": "15%" },
+            { data: 'blogPost.title', "width": "10%" },
+            { data: 'student.name', "width": "10%" },
+            { data: 'student.email', "width": "10%" },
+            { data: 'student.rollNumber', "width": "15%" },
+            { data: 'student.year', "width": "5%" },
+            { data: 'student.batch', "width": "10%" },
+            { data: 'appliedOn', "width": "15%" },
             {
                 data: 'userId',
                 "render": function (data) {
@@ -43,7 +43,7 @@ $(document).ready(function () {
             }
         ],
         "language": {
-            "emptyTable": "No Registrations available"
+            "emptyTable": "No Data available"
         }
     });
 
