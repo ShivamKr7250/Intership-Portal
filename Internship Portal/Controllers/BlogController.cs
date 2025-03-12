@@ -100,7 +100,7 @@ namespace Internship_Portal.Controllers
         }
 
         [Authorize]
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
             BlogVM blogVM = new BlogVM()
             {
@@ -112,30 +112,84 @@ namespace Internship_Portal.Controllers
                 }),
                 Tags = new List<string>()
             };
+
+            if (id != null && id > 0)
+            {
+                // Fetch existing blog post for update
+                blogVM.BlogPost = _unitOfWork.BlogPost.Get(u => u.PostId == id, includeProperties: "BlogCategory");
+                if (blogVM.BlogPost == null)
+                {
+                    return NotFound();
+                }
+            }
+
             return View(blogVM);
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BlogVM model)
+        public IActionResult Upsert(BlogVM model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userDetail = _unitOfWork.User.Get(u => u.Id == userId);
-            model.BlogPost.UserId = userDetail.Id;
-            model.BlogPost.AuthorName = userDetail.Name;
-            model.BlogPost.PublicationDate = DateTime.Now;
 
-            // Handle the blog thumbnail image
+            BlogPost blogPost;
+
+            if (model.BlogPost.PostId == 0)
+            {
+                // New Blog Post (Create)
+                blogPost = model.BlogPost;
+                blogPost.UserId = userDetail.Id;
+                blogPost.AuthorName = userDetail.Name;
+                blogPost.PublicationDate = DateTime.Now;
+            }
+            else
+            {
+                // Existing Blog Post (Update)
+                blogPost = _unitOfWork.BlogPost.Get(b => b.PostId == model.BlogPost.PostId);
+                if (blogPost == null)
+                {
+                    return NotFound();
+                }
+
+                // Update existing fields
+                blogPost.Title = model.BlogPost.Title;
+                blogPost.CompanyName = model.BlogPost.CompanyName;
+                blogPost.ShortDescription = model.BlogPost.ShortDescription;
+                blogPost.Content = model.BlogPost.Content;
+                blogPost.CategoryId = model.BlogPost.CategoryId;
+                blogPost.Batch = model.BlogPost.Batch;
+                blogPost.Course = model.BlogPost.Course;
+                blogPost.ApplicationDeadline = model.BlogPost.ApplicationDeadline;
+
+                // Handle Tags
+                if (!string.IsNullOrEmpty(model.BlogPost.Tags))
+                {
+                    blogPost.Tags = string.Join(",", model.BlogPost.Tags);
+                }
+            }
+
+            // Handle Image Upload
             if (model.BlogPost.Image != null)
             {
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.BlogPost.Image.FileName);
-                string imagePath = Path.Combine(wwwRootPath, @"images\blogThumbnails");
+                string imagePath = Path.Combine(wwwRootPath, "images", "blogThumbnails");
 
-                // Create the directory if it doesn't exist
                 if (!Directory.Exists(imagePath))
                 {
                     Directory.CreateDirectory(imagePath);
+                }
+
+                // Delete old image if exists
+                if (!string.IsNullOrEmpty(blogPost.BlogThumbnail))
+                {
+                    string oldImagePath = Path.Combine(wwwRootPath, blogPost.BlogThumbnail.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
                 }
 
                 string fullImagePath = Path.Combine(imagePath, fileName);
@@ -144,20 +198,25 @@ namespace Internship_Portal.Controllers
                     model.BlogPost.Image.CopyTo(fileStream);
                 }
 
-                model.BlogPost.BlogThumbnail = @"\images\blogThumbnails\" + fileName;
+                blogPost.BlogThumbnail = "/images/blogThumbnails/" + fileName;
             }
 
-            // Handle tags functionality
-            if (!string.IsNullOrEmpty(model.BlogPost.Tags))
+            if (model.BlogPost.PostId == 0)
             {
-                model.BlogPost.Tags = string.Join(",", model.BlogPost.Tags);
+                _unitOfWork.BlogPost.Add(blogPost);
+            }
+            else
+            {
+                _unitOfWork.BlogPost.Update(blogPost);
             }
 
-            _unitOfWork.BlogPost.Add(model.BlogPost);
             _unitOfWork.Save();
-            TempData["success"] = "The Blog has been created successfully.";
+            TempData["success"] = model.BlogPost.PostId == 0 ? "The Blog has been created successfully." : "The Blog has been updated successfully.";
+
             return RedirectToAction(nameof(Index));
         }
+
+
 
 
         [HttpGet]
@@ -301,9 +360,20 @@ namespace Internship_Portal.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<BlogPost> objUserList = _unitOfWork.BlogPost.GetAll().ToList();
-            return Json(new { data = objUserList });
+            var blogPosts = _unitOfWork.BlogPost.GetAll(includeProperties: "BlogCategory,ApplicationUser")
+                .Select(post => new
+                {
+                    post.PostId,
+                    post.Title,
+                    AuthorName = post.ApplicationUser != null ? post.ApplicationUser.Name : "Unknown",
+                    post.PublicationDate,
+                    CategoryName = post.BlogCategory != null ? post.BlogCategory.Name : "Uncategorized",
+                    post.CompanyName
+                }).ToList();
+
+            return Json(new { data = blogPosts });
         }
+
 
         [HttpDelete]
         public IActionResult Delete(int? id)

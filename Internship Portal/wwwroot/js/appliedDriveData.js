@@ -20,7 +20,7 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { data: 'blogPost.title', "width": "10%" },
+            { data: 'blogPost.companyName', "width": "10%" },
             { data: 'student.name', "width": "10%" },
             { data: 'student.email', "width": "10%" },
             { data: 'student.rollNumber', "width": "15%" },

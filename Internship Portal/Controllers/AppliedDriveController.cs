@@ -45,7 +45,7 @@ namespace Internship_Portal.Controllers
             }
             if (!string.IsNullOrEmpty(company))
             {
-                query = query.Where(u => u.BlogPost.Title.ToLower() == company.ToLower());
+                query = query.Where(u => u.BlogPost.CompanyName.ToLower() == company.ToLower());
             }
             if (!string.IsNullOrEmpty(course))
             {
@@ -68,7 +68,7 @@ namespace Internship_Portal.Controllers
             var data = query
                 .Select(a => new
                 {
-                    blogPost = new { title = a.BlogPost.Title },
+                    blogPost = new { companyName = a.BlogPost.CompanyName },
                     student = new
                     {
                         name = a.Student.Name,
