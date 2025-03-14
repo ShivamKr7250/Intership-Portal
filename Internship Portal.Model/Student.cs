@@ -22,19 +22,6 @@ namespace Internship_Portal.Model
 
         [Required]
         public string Email { get; set; }
-
-        [Required]
-        public string Contact { get; set; }
-
-        [Required]
-        public string Address { get; set; }
-
-        [Required]
-        public string City { get; set; }
-
-        [Required]
-        public string State { get; set; }
-
         [Required]
         public char Section { get; set; }
 
@@ -52,6 +39,18 @@ namespace Internship_Portal.Model
 
         [Required]
         public int Batch { get; set; }
+
+        [Required]
+        public string Contact { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string State { get; set; }
 
         [Required]
         public int Backlogs { get; set; }

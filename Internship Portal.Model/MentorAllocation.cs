@@ -13,14 +13,14 @@ namespace Internship_Portal.Model
         [Key]
         public int MentorAllocationId { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         [ForeignKey("UserId")]
         public ApplicationUser? Mentor { get; set; }
 
         // ✅ Student (For Single Allocation)
         public int? StudentId { get; set; }
         [ForeignKey("StudentId")]
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
 
         // ✅ Allocation Timestamp
         public DateTime AllocatedOn { get; set; } = DateTime.UtcNow;
