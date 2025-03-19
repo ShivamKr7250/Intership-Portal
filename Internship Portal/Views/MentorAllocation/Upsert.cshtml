@@ -28,6 +28,9 @@
                                         <option value="B">B</option>
                                         <option value="C">C</option>
                                         <option value="D">D</option>
+                                        <option value="E">E</option>
+                                        <option value="F">F</option>
+                                        <option value="G">G</option>
                                     </select>
                                 </div>
 
@@ -42,15 +45,18 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-12 mb-4 text-end">
+                                <button type="button" id="applyFilter" class="btn btn-info">Apply Filter</button>
+                            </div>
 
                             <div class="col-md-12 mb-4">
                                 <label class="form-label">Select Mentor</label>
                                 <select asp-for="SelectedMentorId" class="form-control">
                                     <option value="">Select Mentor</option>
-                                   @*  @foreach (var mentor in Model.Mentors)
+                                    @foreach (var mentor in Model.Mentors)
                                     {
-                                        <option value="@mentor.Id">@mentor.Name</option>
-                                    } *@
+                                        <option value="@mentor.Id">@mentor.UserName</option>
+                                    }
                                 </select>
                                 <span asp-validation-for="SelectedMentorId" class="text-danger"></span>
                             </div>
@@ -68,7 +74,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="studentsTable">
-                                        @* @foreach (var student in Model.Students)
+                                        @foreach (var student in Model.Students)
                                         {
                                             <tr data-section="@student.Section" data-year="@student.Year">
                                                 <td>
@@ -79,7 +85,7 @@
                                                 <td>@student.Section</td>
                                                 <td>@student.Year</td>
                                             </tr>
-                                        } *@
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -100,19 +106,40 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $("#sectionDropdown, #yearDropdown").change(function () {
+            $("#applyFilter").click(function () {
                 var selectedSection = $("#sectionDropdown").val();
                 var selectedYear = $("#yearDropdown").val();
 
-                $("#studentsTable tr").each(function () {
-                    var rowSection = $(this).data("section");
-                    var rowYear = $(this).data("year");
+                if (!selectedSection || !selectedYear) {
+                    alert("Please select both section and year.");
+                    return;
+                }
 
-                    if ((selectedSection === rowSection || selectedSection === "") &&
-                        (selectedYear === rowYear || selectedYear === "")) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
+                $.ajax({
+                    url: `/MentorAllocation/GetStudents?section=${selectedSection}&year=${selectedYear}`,
+                    type: "GET",
+                    success: function (data) {
+                        var tableBody = $("#studentsTable");
+                        tableBody.empty(); // Clear previous data
+
+                        if (data.length === 0) {
+                            tableBody.append('<tr><td colspan="5" class="text-center">No students found</td></tr>');
+                        } else {
+                            data.forEach(student => {
+                                tableBody.append(`
+                                    <tr>
+                                        <td><input type="checkbox" name="SelectedStudentIds" value="${student.studentId}" /></td>
+                                        <td>${student.rollNumber}</td>
+                                        <td>${student.name}</td>
+                                        <td>${student.section}</td>
+                                        <td>${student.year}</td>
+                                    </tr>
+                                `);
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Error fetching students.");
                     }
                 });
             });
@@ -123,3 +150,5 @@
         });
     </script>
 }
+
+

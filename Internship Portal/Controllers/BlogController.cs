@@ -361,23 +361,34 @@ namespace Internship_Portal.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Fetch only the blog posts created by the specific user
-            var blogPosts = _unitOfWork.BlogPost
-                .GetAll(b => b.UserId == userId, includeProperties: "BlogCategory,ApplicationUser")
-                .Select(post => new
-                {
-                    post.PostId,
-                    post.Title,
-                    AuthorName = post.ApplicationUser != null ? post.ApplicationUser.Name : "Unknown",
-                    post.PublicationDate,
-                    CategoryName = post.BlogCategory != null ? post.BlogCategory.Name : "Uncategorized",
-                    post.CompanyName
-                })
-                .ToList();
+            if (User.IsInRole(SD.Role_Admin))
+            {
+                var blogPosts = _unitOfWork.BlogPost.GetAll().ToList();
+                    return Json(new { data = blogPosts });
+            }
+            else
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return Json(new { data = blogPosts });
+                // Fetch only the blog posts created by the specific user
+                var blogPosts = _unitOfWork.BlogPost
+                    .GetAll(b => b.UserId == userId, includeProperties: "BlogCategory,ApplicationUser")
+                    .Select(post => new
+                    {
+                        post.PostId,
+                        post.Title,
+                        AuthorName = post.ApplicationUser != null ? post.ApplicationUser.Name : "Unknown",
+                        post.PublicationDate,
+                        CategoryName = post.BlogCategory != null ? post.BlogCategory.Name : "Uncategorized",
+                        post.CompanyName
+                    })
+                    .ToList();
+                return Json(new { data = blogPosts });
+            }
+                
+
+            
         }
 
 

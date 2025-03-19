@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,7 +16,7 @@ namespace Internship_Portal.Model
 
         public string? UserId { get; set; }
         [ForeignKey("UserId")]
-        public ApplicationUser? Mentor { get; set; }
+        public IdentityUser? Mentor { get; set; }
 
         // ✅ Student (For Single Allocation)
         public int? StudentId { get; set; }

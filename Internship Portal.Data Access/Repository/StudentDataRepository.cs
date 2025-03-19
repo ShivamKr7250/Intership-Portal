@@ -1,6 +1,7 @@
 ﻿using Internship_Portal.Data_Access.Data;
 using Internship_Portal.Data_Access.Repository.IRepository;
 using Internship_Portal.Model;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Internship_Portal.Data_Access.Repository
 {
@@ -17,5 +18,7 @@ namespace Internship_Portal.Data_Access.Repository
         {
             _db.StudentsData.Update(studentData);
         }
+
+
     }
 }

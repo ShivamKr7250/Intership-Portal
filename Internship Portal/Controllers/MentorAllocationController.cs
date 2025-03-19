@@ -1,10 +1,13 @@
-﻿using Internship_Portal.Data_Access.Repository.IRepository;
+﻿using Internship_Portal.Data_Access.Repository;
+using Internship_Portal.Data_Access.Repository.IRepository;
 using Internship_Portal.Model;
 using Internship_Portal.Model.VM;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SkiaSharp;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Internship_Portal.Controllers
 {
@@ -55,29 +58,58 @@ namespace Internship_Portal.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public IActionResult Upsert(MentorAllocationVM model)
+        {
+            if (model.SelectedStudentIds == null || !model.SelectedStudentIds.Any())
+            {
+                TempData["error"] = "Please select a mentor and at least one student.";
+                return RedirectToAction("Index");
+            }
+
+            foreach (var studentId in model.SelectedStudentIds)
+            {
+                var existingAllocation = _unitOfWork.MentorAllocation.Get(m => m.StudentId == studentId);
+
+                if (existingAllocation != null)
+                {
+                    // Update existing allocation
+                    existingAllocation.MentorAllocationId = model.SelectedMentorId;
+                    _unitOfWork.MentorAllocation.Update(existingAllocation);
+                }
+                else
+                {
+                    // Insert new allocation
+                    var newAllocation = new MentorAllocation
+                    {
+                        StudentId = studentId,
+                        MentorId = model.SelectedMentorId,
+                        AllocatedOn = DateTime.UtcNow
+                    };
+                    _unitOfWork.MentorAllocation.Add(newAllocation);
+                }
+            }
+
+            _unitOfWork.Save();
+            TempData["success"] = "Mentor allocated successfully.";
+            return RedirectToAction("Index");
+        }
+
+        #region API Calls
+        [HttpGet]
+        public IActionResult GetStudents(char section, char year)
+        {
+            string sectionString = section.ToString();  // Convert char to string
+
+            var students = _unitOfWork.StudentData.GetAll()
+                .Where(u => u.Year == year && u.Section.ToString() == sectionString)
+                .ToList();  // Execute query
+
+            return Ok(students);
+        }
 
 
-        //[HttpPost]
-        //public IActionResult Upsert(MentorAllocationVM model)
-        //{
-        //    if (model.SelectedMentorId == 0 || model.SelectedStudentIds == null || !model.SelectedStudentIds.Any())
-        //    {
-        //        TempData["error"] = "Please select a mentor and at least one student.";
-        //        return RedirectToAction("Index");
-        //    }
+        #endregion
 
-        //    foreach (var studentId in model.SelectedStudentIds)
-        //    {
-        //        var student = _unitOfWork.StudentData.Get(studentId);
-        //        if (student != null)
-        //        {
-        //            student. = model.SelectedMentorId;
-        //        }
-        //    }
-
-        //    _dbContext.SaveChanges();
-        //    TempData["success"] = "Mentor allocated successfully.";
-        //    return RedirectToAction("Index");
-        //}
     }
 }
