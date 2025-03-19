@@ -26,7 +26,7 @@ $(document).ready(function () {
             { data: 'year', "width": "5%" },
             { data: 'section', "width": "5%" },
             { data: 'batch', "width": "10%" },
-            { data: 'skills', "width": "15%" },
+            { data: 'mentor.mentorName', "width": "15%" },
             {
                 data: 'userId',
                 "render": function (data) {

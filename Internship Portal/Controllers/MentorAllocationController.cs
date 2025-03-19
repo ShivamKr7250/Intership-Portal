@@ -2,11 +2,14 @@
 using Internship_Portal.Data_Access.Repository.IRepository;
 using Internship_Portal.Model;
 using Internship_Portal.Model.VM;
+using Internship_Portal.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SkiaSharp;
+using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Internship_Portal.Controllers
@@ -38,6 +41,7 @@ namespace Internship_Portal.Controllers
             // ✅ ViewModel with select lists
             var model = new MentorAllocationVM
             {
+                MentorAllocation = new MentorAllocation(),
                 Mentors = mentors,
                 Students = students
             };
@@ -74,7 +78,8 @@ namespace Internship_Portal.Controllers
                 if (existingAllocation != null)
                 {
                     // Update existing allocation
-                    existingAllocation.MentorAllocationId = model.SelectedMentorId;
+                    existingAllocation.AllocatedOn = DateTime.UtcNow;
+                    existingAllocation.UserId = model.SelectedMentorId;
                     _unitOfWork.MentorAllocation.Update(existingAllocation);
                 }
                 else
@@ -83,7 +88,7 @@ namespace Internship_Portal.Controllers
                     var newAllocation = new MentorAllocation
                     {
                         StudentId = studentId,
-                        MentorId = model.SelectedMentorId,
+                        UserId = model.SelectedMentorId,
                         AllocatedOn = DateTime.UtcNow
                     };
                     _unitOfWork.MentorAllocation.Add(newAllocation);
@@ -107,6 +112,64 @@ namespace Internship_Portal.Controllers
 
             return Ok(students);
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetAll(char? year, bool? isPlaced, char? section, int? batch, string skills, int draw, int start, int length)
+        {
+            var mentorAllocations = _unitOfWork.MentorAllocation.GetAll()
+                .Where(ma => ma.Mentor != null) // Ensure mentors exist
+                .Select(ma => new
+                {
+                    MentorId = ma.Mentor.Id,
+                    MentorName = ma.Mentor.UserName,
+                    MentorEmail = ma.Mentor.Email,
+                    StudentYear = ma.Student != null ? ma.Student.Year : (char?)null,
+                    StudentSection = ma.Student != null ? ma.Student.Section : (char?)null,
+                    StudentBatch = ma.Student != null ? ma.Student.Batch : (int?)null,
+                    StudentId = ma.Student != null ? ma.Student.StudentId : (int?)null
+                });
+
+            // ✅ Apply Filters
+            if (year.HasValue)
+            {
+                mentorAllocations = mentorAllocations.Where(u => u.StudentYear == year.Value);
+            }
+            if (batch.HasValue)
+            {
+                mentorAllocations = mentorAllocations.Where(u => u.StudentBatch == batch.Value);
+            }
+
+            // ✅ Aggregate Data: Group by Mentor
+            var mentorGroupedData = mentorAllocations
+                .GroupBy(m => new { m.MentorId, m.MentorName, m.MentorEmail })
+                .Select(group => new
+                {
+                    MentorId = group.Key.MentorId,
+                    MentorName = group.Key.MentorName,
+                    MentorEmail = group.Key.MentorEmail,
+                    TotalAllocatedStudents = group.Count(m => m.StudentId != null), // Count only valid students
+                    Years = group.Where(m => m.StudentYear.HasValue).Select(m => m.StudentYear).Distinct().ToList(),
+                    Batches = group.Where(m => m.StudentBatch.HasValue).Select(m => m.StudentBatch).Distinct().ToList(),
+                    Sections = group.Where(m => m.StudentSection.HasValue).Select(m => m.StudentSection) .Distinct().ToList()
+                }).ToList();
+
+            // ✅ Get total records count BEFORE pagination
+            int totalRecords = mentorGroupedData.Count();
+
+            // ✅ Apply Pagination
+            var data = mentorGroupedData.Skip(start).Take(length).ToList();
+
+            return Json(new
+            {
+                draw = draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = data
+            });
+        }
+
+
 
 
         #endregion

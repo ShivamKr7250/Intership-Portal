@@ -117,16 +117,35 @@ namespace Internship_Portal.Controllers
         [Authorize]
         public IActionResult GetAll(char? year, bool? isPlaced, char? section, int? batch, string skills, int draw, int start, int length)
         {
-            var query = _unitOfWork.StudentData.GetAll();
+            var query = _unitOfWork.StudentData.GetAll()
+                .Select(student => new
+                {
+                    student.StudentId,
+                    student.Name,
+                    student.RollNumber,
+                    student.Email,
+                    student.Year,
+                    student.Section,
+                    student.Batch,
+                    student.Skills,
+                    student.IsPlaced,
+                    Mentor = _unitOfWork.MentorAllocation.GetAll(null, null, false)
+                        .Where(ma => ma.StudentId == student.StudentId)
+                        .Select(ma => new
+                        {
+                            ma.Mentor,
+                            MentorName = ma.Mentor.UserName, // Assuming Mentor has a Name property
+                            MentorEmail = ma.Mentor.Email
+                        }).FirstOrDefault() // Get only the first mentor allocation if multiple exist
+                });
 
+            // Apply filtering
             if (User.IsInRole(SD.Role_Student))
             {
                 var claimsIdentity = (ClaimsIdentity)User.Identity;
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 query = query.Where(u => u.Email == userId);
             }
-
-            // Apply filtering
             if (year.HasValue)
             {
                 query = query.Where(u => u.Year == year.Value);
@@ -163,6 +182,7 @@ namespace Internship_Portal.Controllers
                 data = data
             });
         }
+
 
 
 

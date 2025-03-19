@@ -8,6 +8,9 @@
             </div>
         </div>
     </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <a asp-controller="MentorAllocation" asp-action="Upsert" class="btn btn-primary w-100">Allocate Mentor</a>
+    </div>
     <div class="card-body border p-4">
         <!-- Filter Section -->
         <div class="row pb-4">
@@ -60,16 +63,15 @@
             </div>
         </div>
 
-        <table id="tblBookings" class="table table-bordered table-striped" style="width:100%">
+        <table id="mentorStudentTable" class="table table-bordered table-striped" style="width:100%">
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Email</th>
                     <th>Year</th>
-                    <th>Section</th>
-                    <th>Count</th>
-                    <th>Section</th>
                     <th>Batch</th>
-                    <th>Skills</th>
+                    <th>Section</th>
+                    <th>Total Student</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -80,5 +82,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/studentData.js"></script>
+    <script src="~/js/MentorData.js"></script>
 }

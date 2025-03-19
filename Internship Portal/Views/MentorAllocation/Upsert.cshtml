@@ -1,12 +1,17 @@
 ﻿@model MentorAllocationVM
 
+@{
+    bool isEditMode = Model.MentorAllocation.MentorAllocationId > 0;
+    ViewData["Title"] = isEditMode ? "Edit Mentor Allocation" : "Allocate Mentor";
+}
+
 <section class="h-100 gradient-custom">
     <div class="container py-5 h-100">
         <div class="row justify-content-center align-items-center h-100">
             <div class="col-12 col-lg-10 col-xl-9">
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                     <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Mentor Allocation</h3>
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">@ViewData["Title"]</h3>
 
                         @if (TempData["error"] != null)
                         {
@@ -18,7 +23,7 @@
                             <div class="alert alert-success">@TempData["success"]</div>
                         }
 
-                        <form asp-action="AllocateMentor" asp-controller="MentorAllocation" method="post">
+                        <form asp-action="Upsert" asp-controller="MentorAllocation" method="post">
                             <div class="row">
                                 <div class="col-md-6 mb-4">
                                     <label class="form-label">Select Section</label>
@@ -91,8 +96,8 @@
                             </div>
 
                             <div class="mt-4 pt-2">
-                                <input class="btn btn-primary btn-lg" type="submit" value="Allocate Mentor" />
-                                <a asp-controller="StudentData" asp-action="Index" class="btn btn-secondary btn-lg ms-3">Back to List</a>
+                                <button type="submit" class="btn btn-primary">@(@isEditMode ? "Update" : "Create")</button>
+                                <a asp-controller="MentorAllocation" asp-action="Index" class="btn btn-secondary btn-lg ms-3">Back to List</a>
                             </div>
                         </form>
 

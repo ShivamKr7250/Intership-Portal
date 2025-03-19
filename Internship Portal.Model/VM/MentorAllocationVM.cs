@@ -23,6 +23,8 @@ namespace Internship_Portal.Model.VM
         [Required]
         public List<int> SelectedStudentIds { get; set; } = new List<int>(); // Ensures no null issues
 
+        public MentorAllocation? MentorAllocation { get; set; }
+
         public IEnumerable<ApplicationUser> Mentors { get; set; } = new List<ApplicationUser>();
         public IEnumerable<Student> Students { get; set; } = new List<Student>();
     }
