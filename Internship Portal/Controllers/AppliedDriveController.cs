@@ -31,20 +31,17 @@ namespace Internship_Portal.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            IQueryable<AppliedDrive> query = _unitOfWork.AppliedDrive
-                                             .GetAll(includeProperties: "BlogPost,Student")
-                                             .Include(a => a.Student)
-                                             .ThenInclude(s => s.MentorAllocation);
+            IEnumerable<AppliedDrive> query = _unitOfWork.AppliedDrive.GetAll(includeProperties: "BlogPost,Student,Student.MentorAllocation");
 
             // Role-based filtering
             if (User.IsInRole(SD.Role_Student))
             {
                 query = query.Where(u => u.Student.UserId == userId);
             }
-            else if (User.IsInRole(SD.Role_Mentor))
-            {
-                query = query.Where(u => u.Student.MentorAllocation.Any(ma => ma.UserId == userId));
-            }
+            //else if (User.IsInRole(SD.Role_Mentor))
+            //{
+            //    query = query.Where(u => u.Student.MentorAllocation.Any(ma => ma.UserId == userId));
+            //}
             else if (User.IsInRole(SD.Role_TNP))
             {
                 query = query.Where(u => u.BlogPost.UserId == userId);
