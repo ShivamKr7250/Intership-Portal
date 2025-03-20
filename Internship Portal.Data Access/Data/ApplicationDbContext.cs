@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Internship_Portal.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace Internship_Portal.Data_Access.Data
 {

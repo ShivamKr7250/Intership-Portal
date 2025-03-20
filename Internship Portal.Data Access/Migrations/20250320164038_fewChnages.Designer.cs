@@ -4,6 +4,7 @@ using Internship_Portal.Data_Access.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Internship_Portal.Data_Access.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250320164038_fewChnages")]
+    partial class fewChnages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -351,17 +354,12 @@ namespace Internship_Portal.Data_Access.Migrations
                     b.Property<int?>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StudentId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("MentorAllocationId");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex("StudentId1");
 
                     b.HasIndex("UserId");
 
@@ -948,10 +946,6 @@ namespace Internship_Portal.Data_Access.Migrations
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Internship_Portal.Model.Student", null)
-                        .WithMany("MentorAllocation")
-                        .HasForeignKey("StudentId1");
-
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Mentor")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1040,11 +1034,6 @@ namespace Internship_Portal.Data_Access.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Interactions");
-                });
-
-            modelBuilder.Entity("Internship_Portal.Model.Student", b =>
-                {
-                    b.Navigation("MentorAllocation");
                 });
 
             modelBuilder.Entity("Internship_Portal.Model.ApplicationUser", b =>

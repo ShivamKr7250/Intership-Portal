@@ -14,6 +14,8 @@ namespace Internship_Portal.Model
         [ForeignKey("UserId")]
         public ApplicationUser? ApplicationUser { get; set; }
 
+        public ICollection<MentorAllocation> MentorAllocation { get; set; } = new List<MentorAllocation>();
+
         [Required]
         public int RollNumber { get; set; }
 
@@ -119,6 +121,7 @@ namespace Internship_Portal.Model
         public DateTime? PlacementDate { get; set; }  // Date of placement
 
         public string? AdditionalNotes { get; set; }  // Any extra info
+
     }
 
 }

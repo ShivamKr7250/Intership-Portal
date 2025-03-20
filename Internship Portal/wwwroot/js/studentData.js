@@ -28,10 +28,10 @@ $(document).ready(function () {
             { data: 'batch', "width": "10%" },
             { data: 'mentor.mentorName', "width": "15%" },
             {
-                data: 'userId',
+                data: 'studentId',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                        <a href="/studentData/studentDataRegistration?userId=${data}" class="btn btn-outline-warning mx-2">
+                        <a href="/studentData/studentDataRegistration?studentId=${data}" class="btn btn-outline-warning mx-2">
                             <i class="bi bi-pencil-square"></i> Details
                         </a>
                         <a onClick="Delete('/studentData/delete/${data}')" class="btn btn-outline-danger mx-2">

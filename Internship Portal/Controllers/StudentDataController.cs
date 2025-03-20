@@ -22,9 +22,9 @@ namespace Internship_Portal.Controllers
             return View(studentData);
         }
 
-        public IActionResult StudentDataRegistration(string userId)
+        public IActionResult StudentDataRegistration(int studentId)
         {
-            if (userId == null)
+            if (studentId == null)
             {
                 //Create
                 return View();
@@ -32,7 +32,7 @@ namespace Internship_Portal.Controllers
             else
             {
                 //Update
-                Student studentData = _unitOfWork.StudentData.Get(u => u.UserId == userId);
+                Student studentData = _unitOfWork.StudentData.Get(u => u.StudentId == studentId);
                 return View(studentData);
             }
         }
@@ -146,6 +146,15 @@ namespace Internship_Portal.Controllers
                 var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 query = query.Where(u => u.Email == userId);
             }
+            if (User.IsInRole(SD.Role_Mentor))
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var mentorId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                // ✅ Retrieve only students allocated to the logged-in mentor
+                query = query.Where(u => u.Mentor.Mentor.Id == mentorId);
+            }
+
             if (year.HasValue)
             {
                 query = query.Where(u => u.Year == year.Value);

@@ -28,50 +28,51 @@ namespace Internship_Portal.Controllers
         [Authorize]
         public IActionResult GetAll(DateTime? date, string company, string course, int? batch, int? rollNumber, int draw, int start, int length)
         {
-            IEnumerable<AppliedDrive> query;
-            query = _unitOfWork.AppliedDrive.GetAll(includeProperties: "BlogPost,Student");
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            IQueryable<AppliedDrive> query = _unitOfWork.AppliedDrive
+                                             .GetAll(includeProperties: "BlogPost,Student")
+                                             .Include(a => a.Student)
+                                             .ThenInclude(s => s.MentorAllocation);
+
+            // Role-based filtering
             if (User.IsInRole(SD.Role_Student))
             {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
                 query = query.Where(u => u.Student.UserId == userId);
             }
-
-            if (User.IsInRole(SD.Role_TNP))
+            else if (User.IsInRole(SD.Role_Mentor))
             {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                query = query.Where(u => u.Student.MentorAllocation.Any(ma => ma.UserId == userId));
+            }
+            else if (User.IsInRole(SD.Role_TNP))
+            {
                 query = query.Where(u => u.BlogPost.UserId == userId);
             }
 
             // Apply filtering
             if (date.HasValue)
-            {
                 query = query.Where(u => u.AppliedOn.Date == date.Value.Date);
-            }
-            if (!string.IsNullOrEmpty(company))
-            {
-                query = query.Where(u => u.BlogPost.CompanyName.ToLower() == company.ToLower());
-            }
-            if (!string.IsNullOrEmpty(course))
-            {
-                query = query.Where(u => u.Student.Course.ToLower() == course.ToLower());
-            }
-            if (batch.HasValue)
-            {
-                query = query.Where(u => u.Student.Batch == batch.Value);
-            }
-            if (rollNumber.HasValue)
-            {
-                query = query.Where(u => u.Student.RollNumber == rollNumber.Value);
-            }
 
-            // Get total records count before applying pagination
+            if (!string.IsNullOrEmpty(company))
+                query = query.Where(u => u.BlogPost.CompanyName.ToLower() == company.ToLower());
+
+            if (!string.IsNullOrEmpty(course))
+                query = query.Where(u => u.Student.Course.ToLower() == course.ToLower());
+
+            if (batch.HasValue)
+                query = query.Where(u => u.Student.Batch == batch.Value);
+
+            if (rollNumber.HasValue)
+                query = query.Where(u => u.Student.RollNumber == rollNumber.Value);
+
+            // Get total records count before pagination
             int totalRecords = query.Count();
 
-            // Select only necessary fields & apply pagination
+            // Apply pagination and select necessary fields
             var data = query
+                .Skip(start)
+                .Take(length)
                 .Select(a => new
                 {
                     blogPost = new { companyName = a.BlogPost.CompanyName },
@@ -85,8 +86,6 @@ namespace Internship_Portal.Controllers
                     },
                     appliedOn = a.AppliedOn
                 })
-                .Skip(start)
-                .Take(length)
                 .ToList();
 
             return Json(new

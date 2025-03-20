@@ -5,16 +5,10 @@ using Internship_Portal.Model.VM;
 using System.Security.Claims;
 using System;
 using Internship_Portal.Data_Access.Repository.IRepository;
-using Microsoft.AspNetCore.Hosting;
-using static Internship_Portal.Controllers.UserController;
 using Internship_Portal.Controllers.Service;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Internship_Portal.Data_Access.Repository;
 using Internship_Portal.Utility;
 using Microsoft.EntityFrameworkCore;
-using SkiaSharp;
-using Microsoft.AspNetCore.Identity;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Internship_Portal.Controllers
 {
